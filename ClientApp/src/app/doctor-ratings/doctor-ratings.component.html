@@ -1,0 +1,17 @@
+<h1 id="tableLabel">Doctor Ratings</h1>
+
+
+<p *ngIf="!ratings"><em>Loading...</em></p>
+
+<table class='table table-striped' aria-labelledby="tableLabel" *ngIf="ratings">
+  <thead>
+    <tr>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let rating of ratings">
+      <td>{{ rating.name }}</td>
+    </tr>
+  </tbody>
+</table>
