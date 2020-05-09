@@ -24,5 +24,7 @@ namespace Pharma.DbContext
 		public virtual DbSet<Relative> Relatives { get; set; }
 		public virtual DbSet<Drug> Drugs { get; set; }
 		public virtual DbSet<Procedure> Procedures { get; set; }
+		public virtual DbSet<DoctorToHospital> DoctorToHospitals { get; set; }
+
 	}
 }

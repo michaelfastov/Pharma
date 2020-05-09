@@ -12,12 +12,13 @@ namespace Pharma.DbContext.Entities
 		public string Surname { get; set; }
 		public string Phone { get; set; }
 		public string Specialization { get; set; }
+		public double ReceptionPrice { get; set; }
 		public string IdentityId { get; set; }
 		public AppUser Identity { get; set; }
 
 		public virtual ICollection<Reception> Receptions { get; set; }
 		public virtual ICollection<Document> Documents { get; set; }
 		public virtual ICollection<DoctorToDoctorRating> DoctorToDoctorRating { get; set; }
-
+		public virtual ICollection<DoctorToHospital> DoctorToHospital { get; set; }
 	}
 }

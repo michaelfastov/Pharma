@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 
 namespace Pharma.DbContext.Entities
 {
-	public class DoctorToDoctorRating
+	public class DoctorToHospital
 	{
-		public int DoctorToDoctorRatingId { get; set; }
+		public int DoctorToHospitalId { get; set; }
 		public int DoctorId { get; set; }
-		public int DoctorRatingId { get; set; }
-		public int RankingPlace { get; set; }
+		public int HospitalId { get; set; }
 
 		public Doctor Doctor { get; set; }
-		public DoctorRating DoctorRating { get; set; }
+		public Hospital Hospital { get; set; }
 	}
 }

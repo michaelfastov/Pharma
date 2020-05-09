@@ -4,107 +4,136 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
 
 namespace Pharma.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class DoctorRatingsController : ControllerBase
-    {
-        private readonly PharmaContext _context;
+	[Route("api/[controller]")]
+	[ApiController]
+	public class DoctorRatingsController : ControllerBase
+	{
+		private readonly PharmaContext _context;
 
-        public DoctorRatingsController(PharmaContext context)
-        {
-            _context = context;
-        }
+		public DoctorRatingsController(PharmaContext context)
+		{
+			_context = context;
+		}
 
-        // GET: api/DoctorRatings
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<DoctorRating>>> GetDoctorRatings()
-        {
-            return await _context.DoctorRatings.ToListAsync();
-        }
+		// GET: api/DoctorRatings
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<DoctorRating>>> GetDoctorRatings()
+		{
+			return await _context.DoctorRatings.ToListAsync();
+		}
 
-        // GET: api/DoctorRatings/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<DoctorRating>> GetDoctorRating(int id)
-        {
-            var doctorRating = await _context.DoctorRatings.FindAsync(id);
+		[HttpGet("GetDoctorRatingsByCategory/{category}")]
+		public ActionResult<IEnumerable<DoctorToDoctorRating>> GetDoctorRatingsByCategory(string category)
+		{
+			var result =
+				from doctorToDoctorRatings in _context.DoctorToDoctorRatings
+				join doctors in _context.Doctors on doctorToDoctorRatings.DoctorId equals doctors.DoctorId
+				join doctorRatings in _context.DoctorRatings on doctorToDoctorRatings.DoctorRatingId equals
+					doctorRatings.DoctorRatingId
+				where doctors.Specialization == category && doctorRatings.Name == category
+				orderby doctorToDoctorRatings.RankingPlace
+				select new DoctorToDoctorRating
+				{
+					DoctorToDoctorRatingId = doctorToDoctorRatings.DoctorToDoctorRatingId,
+					DoctorId = doctorToDoctorRatings.DoctorId,
+					DoctorRatingId = doctorToDoctorRatings.DoctorRatingId,
+					RankingPlace = doctorToDoctorRatings.RankingPlace
+				};
 
-            if (doctorRating == null)
-            {
-                return NotFound();
-            }
+			var resultList = result.ToList();
 
-            return doctorRating;
-        }
+			for (var i = 0; i < resultList.Count; i++)
+			{
+				resultList[i].RankingPlace = i + 1;
+			}
 
-        // PUT: api/DoctorRatings/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDoctorRating(int id, DoctorRating doctorRating)
-        {
-            if (id != doctorRating.DoctorRatingId)
-            {
-                return BadRequest();
-            }
+			return Ok(resultList);
+		}
 
-            _context.Entry(doctorRating).State = EntityState.Modified;
+		// GET: api/DoctorRatings/5
+		[HttpGet("{id}")]
+		public async Task<ActionResult<DoctorRating>> GetDoctorRating(int id)
+		{
+			var doctorRating = await _context.DoctorRatings.FindAsync(id);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!DoctorRatingExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+			if (doctorRating == null)
+			{
+				return NotFound();
+			}
 
-            return NoContent();
-        }
+			return doctorRating;
+		}
 
-        // POST: api/DoctorRatings
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public async Task<ActionResult<DoctorRating>> PostDoctorRating(DoctorRating doctorRating)
-        {
-            _context.DoctorRatings.Add(doctorRating);
-            await _context.SaveChangesAsync();
+		// PUT: api/DoctorRatings/5
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for
+		// more details see https://aka.ms/RazorPagesCRUD.
+		[HttpPut("{id}")]
+		public async Task<IActionResult> PutDoctorRating(int id, DoctorRating doctorRating)
+		{
+			if (id != doctorRating.DoctorRatingId)
+			{
+				return BadRequest();
+			}
 
-            return CreatedAtAction("GetDoctorRating", new { id = doctorRating.DoctorRatingId }, doctorRating);
-        }
+			_context.Entry(doctorRating).State = EntityState.Modified;
 
-        // DELETE: api/DoctorRatings/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<DoctorRating>> DeleteDoctorRating(int id)
-        {
-            var doctorRating = await _context.DoctorRatings.FindAsync(id);
-            if (doctorRating == null)
-            {
-                return NotFound();
-            }
+			try
+			{
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!DoctorRatingExists(id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
 
-            _context.DoctorRatings.Remove(doctorRating);
-            await _context.SaveChangesAsync();
+			return NoContent();
+		}
 
-            return doctorRating;
-        }
+		// POST: api/DoctorRatings
+		// To protect from overposting attacks, please enable the specific properties you want to bind to, for
+		// more details see https://aka.ms/RazorPagesCRUD.
+		[HttpPost]
+		public async Task<ActionResult<DoctorRating>> PostDoctorRating(DoctorRating doctorRating)
+		{
+			_context.DoctorRatings.Add(doctorRating);
+			await _context.SaveChangesAsync();
 
-        private bool DoctorRatingExists(int id)
-        {
-            return _context.DoctorRatings.Any(e => e.DoctorRatingId == id);
-        }
-    }
+			return CreatedAtAction("GetDoctorRating", new { id = doctorRating.DoctorRatingId }, doctorRating);
+		}
+
+		// DELETE: api/DoctorRatings/5
+		[HttpDelete("{id}")]
+		public async Task<ActionResult<DoctorRating>> DeleteDoctorRating(int id)
+		{
+			var doctorRating = await _context.DoctorRatings.FindAsync(id);
+			if (doctorRating == null)
+			{
+				return NotFound();
+			}
+
+			_context.DoctorRatings.Remove(doctorRating);
+			await _context.SaveChangesAsync();
+
+			return doctorRating;
+		}
+
+		private bool DoctorRatingExists(int id)
+		{
+			return _context.DoctorRatings.Any(e => e.DoctorRatingId == id);
+		}
+	}
 }

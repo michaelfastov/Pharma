@@ -11,7 +11,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let rating of ratings">
-      <td>{{ rating.name }}</td>
+      <td><a [routerLink]="['/rating/', rating.name]">{{ rating.name }}</a></td>
     </tr>
   </tbody>
 </table>

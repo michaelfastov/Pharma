@@ -12,6 +12,9 @@ namespace Pharma.DbContext.Entities
 		public int DoctorId { get; set; }
 		public int HospitalId { get; set; }
 		public TimeSpan Time { get; set; }
+		public TimeSpan Duration { get; set; }
+		public DateTime Date { get; set; }
+		public string DayOfWeek { get; set; }
 		public string Address { get; set; }
 		public string Purpose { get; set; }
 		public string Result { get; set; }

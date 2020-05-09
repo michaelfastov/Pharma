@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pharma.DbContext;
 
 namespace Pharma.Migrations
 {
     [DbContext(typeof(PharmaContext))]
-    partial class PharmaContextModelSnapshot : ModelSnapshot
+    [Migration("20200506154642_RankingPlace")]
+    partial class RankingPlace
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,9 +239,6 @@ namespace Pharma.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("ReceptionPrice")
-                        .HasColumnType("float");
-
                     b.Property<string>("Specialization")
                         .HasColumnType("nvarchar(max)");
 
@@ -291,28 +290,6 @@ namespace Pharma.Migrations
                     b.HasIndex("DoctorRatingId");
 
                     b.ToTable("DoctorToDoctorRatings");
-                });
-
-            modelBuilder.Entity("Pharma.DbContext.Entities.DoctorToHospital", b =>
-                {
-                    b.Property<int>("DoctorToHospitalId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HospitalId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DoctorToHospitalId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("HospitalId");
-
-                    b.ToTable("DoctorToHospitals");
                 });
 
             modelBuilder.Entity("Pharma.DbContext.Entities.Document", b =>
@@ -381,9 +358,6 @@ namespace Pharma.Migrations
 
                     b.Property<TimeSpan>("ClosesAt")
                         .HasColumnType("time");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<TimeSpan>("OpensAt")
                         .HasColumnType("time");
@@ -626,21 +600,6 @@ namespace Pharma.Migrations
                     b.HasOne("Pharma.DbContext.Entities.DoctorRating", "DoctorRating")
                         .WithMany("DoctorToDoctorRating")
                         .HasForeignKey("DoctorRatingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Pharma.DbContext.Entities.DoctorToHospital", b =>
-                {
-                    b.HasOne("Pharma.DbContext.Entities.Doctor", "Doctor")
-                        .WithMany("DoctorToHospital")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Pharma.DbContext.Entities.Hospital", "Hospital")
-                        .WithMany("DoctorToHospital")
-                        .HasForeignKey("HospitalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
