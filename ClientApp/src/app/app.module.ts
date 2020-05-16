@@ -21,6 +21,7 @@ import { ReceptionService } from './shared/services/reception.service';
 import { DoctorService } from './shared/services/doctor.service';
 import { RatingsService } from './shared/services/ratings.service';
 import { DrugService } from './shared/services/drug.service';
+import { ProcedureService } from './shared/services/procedure.service';
 import { UserTypeService } from './shared/services/user-type.service';
 import { UserService } from './shared/services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +36,7 @@ import { RatingComponent } from './rating/rating.component';
 import { MatTableModule } from '@angular/material/table';
 import { DrugComponent } from './drug/drug.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { ProcedureComponent } from './procedure/procedure.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     DoctorRatingsComponent,
     ReceptionComponent,
     RatingComponent,
-    DrugComponent
+    DrugComponent,
+    ProcedureComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -70,7 +73,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
       { path: 'doctor-ratings', component: DoctorRatingsComponent },
       { path: 'reception', component: ReceptionComponent },
       { path: 'rating/:ratingName', component: RatingComponent },
-      { path: 'drug', component: DrugComponent }
+      { path: 'drug', component: DrugComponent },
+      { path: 'procedure', component: ProcedureComponent }
     ]),
     BrowserAnimationsModule
   ],

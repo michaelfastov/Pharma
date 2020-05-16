@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
+using Pharma.Helpers;
+using Pharma.ViewModels;
 
 namespace Pharma.Controllers
 {
@@ -15,10 +19,12 @@ namespace Pharma.Controllers
 	public class DrugsController : ControllerBase
 	{
 		private readonly PharmaContext _context;
+		private readonly ClaimsPrincipal _caller;
 
-		public DrugsController(PharmaContext context)
+		public DrugsController(PharmaContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
+			_caller = httpContextAccessor.HttpContext.User;
 		}
 
 		// GET: api/Drugs
@@ -29,9 +35,41 @@ namespace Pharma.Controllers
 		}
 
 		[HttpGet("GetDrugsByPatientId/{patientId}")]
-		public async Task<ActionResult<IEnumerable<Drug>>> GetDrugsByPatientId([FromRoute] int patientid)
+		public async Task<ActionResult<IEnumerable<Drug>>> GetDrugsByPatientId([FromRoute] int patientId)
 		{
-			return await _context.Drugs.Where(d => d.PatientId == patientid).ToListAsync();
+			return await _context.Drugs.Where(d => d.PatientId == patientId).ToListAsync();
+		}
+
+
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+		[HttpGet("GetDrugsByDoctorId/{doctorId}")]
+		public async Task<ActionResult<IEnumerable<Drug>>> GetDrugsByDoctorId([FromRoute] int doctorId)
+		{
+			var patient = Utils.GetPatient(_caller, _context);
+			return await _context.Drugs.Where(d => d.DoctorId == doctorId && d.PatientId == patient.PatientId).ToListAsync();
+		}
+
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+		[HttpGet("GetPatientsDrugs")]
+		public ActionResult<IEnumerable<PatientDrugsViewModel>> GetPatientsDrugs()
+		{
+			var patient = Utils.GetPatient(_caller, _context);
+			var result =
+				from drugs in _context.Drugs
+				join doctors in _context.Doctors on drugs.DoctorId equals doctors.DoctorId
+				orderby doctors.Name
+				select new PatientDrugsViewModel
+				{
+					DrugId = drugs.DrugId,
+					PatientId = drugs.PatientId,
+					DoctorId = doctors.DoctorId,
+					DoctorName = doctors.Name,
+					Name = drugs.Name,
+					Price = drugs.Price,
+					Category = drugs.Category,
+				};
+
+			return Ok(result);
 		}
 
 		// GET: api/Drugs/5
@@ -80,12 +118,12 @@ namespace Pharma.Controllers
 			return NoContent();
 		}
 
-		// POST: api/Drugs
-		// To protect from overposting attacks, enable the specific properties you want to bind to, for
-		// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
 		[HttpPost]
 		public async Task<ActionResult<Drug>> PostDrug(Drug drug)
 		{
+			var doctor = Utils.GetDoctor(_caller, _context);
+			drug.DoctorId = doctor.DoctorId;
 			_context.Drugs.Add(drug);
 			await _context.SaveChangesAsync();
 

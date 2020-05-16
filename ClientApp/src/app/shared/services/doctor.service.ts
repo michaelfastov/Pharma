@@ -59,6 +59,14 @@ export class DoctorService {
         return this._http.get(this.myAppUrl + "/Doctors/GetDoctorsPatients", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
+    GetPatientsDoctors() {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let authToken = localStorage.getItem('auth_token');
+        headers.append('Authorization', `Bearer ${authToken}`);
+        return this._http.get(this.myAppUrl + "/Doctors/GetPatientsDoctors", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    }
+
     errorHandler(error: Response) {
         console.log(error);
         return Observable.throw(error.json().error || 'Server error');

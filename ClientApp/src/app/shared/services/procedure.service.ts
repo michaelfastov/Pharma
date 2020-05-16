@@ -21,50 +21,34 @@ import 'rxjs/add/observable/throw';
 @Injectable({
     providedIn: 'root'
 })
-export class DrugService {
+export class ProcedureService {
     myAppUrl: string = "";
     constructor(private _http: Http, private configService: ConfigService) {
         this.myAppUrl = configService.getApiURI();
     }
 
-    GetDrugs() {
+    GetProcedures() {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         let authToken = localStorage.getItem('auth_token');
         headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.get(this.myAppUrl + "/Drugs", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+        return this._http.get(this.myAppUrl + "/Procedures", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
-    GetPatientsDrugs(){
+    GetProceduresByPatientId(patientId: number) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         let authToken = localStorage.getItem('auth_token');
         headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.get(this.myAppUrl + "/Drugs/GetPatientsDrugs", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+        return this._http.get(this.myAppUrl + "/Procedures/GetProceduresByPatientId/" + patientId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
-    GetDrugsByPatientId(patientId: number) {
+    SaveProcedure(procedure: any) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');
         let authToken = localStorage.getItem('auth_token');
         headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.get(this.myAppUrl + "/Drugs/GetDrugsByPatientId/" + patientId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
-    }
-
-    GetDrugsByDoctorId(doctorId: number) {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let authToken = localStorage.getItem('auth_token');
-        headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.get(this.myAppUrl + "/Drugs/GetDrugsByDoctorId/" + doctorId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
-    }
-
-    SaveDrug(drug: any) {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let authToken = localStorage.getItem('auth_token');
-        headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.post(this.myAppUrl + '/Drugs', drug, { headers }).map((response: Response) => response.json()).catch(this.errorHandler)
+        return this._http.post(this.myAppUrl + '/Procedures', procedure, { headers }).map((response: Response) => response.json()).catch(this.errorHandler)
     }
 
     errorHandler(error: Response) {

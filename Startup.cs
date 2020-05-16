@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +19,7 @@ using Pharma.DbContext;
 using Pharma.DbContext.Entities;
 using Pharma.Helpers;
 using Pharma.Models;
+using Newtonsoft.Json;
 
 namespace Pharma
 {
@@ -44,7 +44,10 @@ namespace Pharma
 			services.AddDbContext<PharmaContext>(options =>
 				options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
 					b => b.MigrationsAssembly("Pharma")));
-			services.AddControllersWithViews();
+			//services.AddControllersWithViews();
+			services.AddControllersWithViews().AddNewtonsoftJson(options =>
+				options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+			);
 			services.AddSingleton<IJwtFactory, JwtFactory>();
 			services.TryAddTransient<IHttpContextAccessor, HttpContextAccessor>();
 

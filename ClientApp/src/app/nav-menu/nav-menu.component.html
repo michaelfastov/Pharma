@@ -24,7 +24,13 @@
             <a class="nav-link text-dark" [routerLink]="['/drug']">Drugs</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/procedure']">Procedures</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="userType!='No User'">
             <a class="nav-link text-dark" [routerLink]="" (click)="logout()">Logout</a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="userType=='No User'">
+            <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
           </li>
         </ul>
       </div>

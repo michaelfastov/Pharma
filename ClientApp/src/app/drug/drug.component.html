@@ -38,3 +38,21 @@
         </tbody>
     </table>
 </div>
+
+<div *ngIf="userType=='Patient'">
+    <h1>Prescribed Medicine</h1>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientDrugs">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Drug Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let patientDrug of patientDrugs">
+                <td>{{ patientDrug.doctorName }}</td>
+                <td>{{ patientDrug.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

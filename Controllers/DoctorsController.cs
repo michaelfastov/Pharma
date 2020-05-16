@@ -58,6 +58,17 @@ namespace Pharma.Controllers
 				.ToList());
 		}
 
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+		[HttpGet("GetPatientsDoctors")]
+		public ActionResult<IEnumerable<Doctor>> GetPatientsDoctors()
+		{
+			var patient = Utils.GetPatient(_caller, _context);
+			return Ok(_context.Doctors.Where(p => _context.Receptions.Where(r => r.PatientId == patient.PatientId)
+					.Select(r => r.DoctorId)
+					.Contains(p.DoctorId))
+				.ToList());
+		}
+
 		// GET: api/Doctors/5
 		[HttpGet("{id}")]
 		public async Task<ActionResult<Doctor>> GetDoctor(int id)
