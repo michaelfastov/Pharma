@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
+using Pharma.Helpers;
 
 namespace Pharma.Controllers
 {
@@ -15,10 +18,12 @@ namespace Pharma.Controllers
 	public class DoctorsController : ControllerBase
 	{
 		private readonly PharmaContext _context;
+		private readonly ClaimsPrincipal _caller;
 
-		public DoctorsController(PharmaContext context)
+		public DoctorsController(PharmaContext context, IHttpContextAccessor httpContextAccessor)
 		{
 			_context = context;
+			_caller = httpContextAccessor.HttpContext.User;
 		}
 
 		// GET: api/Doctors
@@ -42,6 +47,16 @@ namespace Pharma.Controllers
 					.Contains(d.DoctorId)));
 		}
 
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
+		[HttpGet("GetDoctorsPatients")]
+		public ActionResult<IEnumerable<Patient>> GetDoctorsPatients()
+		{
+			var doctor = Utils.GetDoctor(_caller, _context);
+			return Ok(_context.Patients.Where(p => _context.Receptions.Where(r => r.DoctorId == doctor.DoctorId)
+					.Select(r => r.PatientId)
+					.Contains(p.PatientId))
+				.ToList());
+		}
 
 		// GET: api/Doctors/5
 		[HttpGet("{id}")]

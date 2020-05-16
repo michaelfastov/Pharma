@@ -8,6 +8,7 @@ import {BaseService} from "./base.service";
 
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/Rx'; 
+import { UserTypeService } from './user-type.service';
 
 // Add the RxJS Observable operators we need in this app.
 //import '../../rxjs-operators';
@@ -25,7 +26,7 @@ export class UserService extends BaseService {
 
   private loggedIn = false;
 
-  constructor(private http: Http, private configService: ConfigService) {
+  constructor(private _userTypeService: UserTypeService, private http: Http, private configService: ConfigService) {
     super();
     this.loggedIn = !!localStorage.getItem('auth_token');
     // ?? not sure if this the best way to broadcast the status but seems to resolve issue on page refresh where auth status is lost in
@@ -56,6 +57,7 @@ export class UserService extends BaseService {
       .map(res => res.json())
       .map(res => {
         localStorage.setItem('auth_token', res.auth_token);
+        this._userTypeService.setUserType(res.user_type);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
         return true;
@@ -67,6 +69,7 @@ export class UserService extends BaseService {
     localStorage.removeItem('auth_token');
     this.loggedIn = false;
     this._authNavStatusSource.next(false);
+    this._userTypeService.setUserType("No User");
   }
 
   isLoggedIn() {

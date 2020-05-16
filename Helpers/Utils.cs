@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Pharma.DbContext;
+using Pharma.DbContext.Entities;
 
 namespace Pharma.Helpers
 {
@@ -35,6 +39,24 @@ namespace Pharma.Helpers
 				"15:30:00",
 				"16:00:00"
 			};
+		}
+
+		public static Patient GetPatient(ClaimsPrincipal _caller, PharmaContext _context)
+		{
+			var test = _caller.Claims.ToList();
+			var userId = _caller.Claims.Single(c => c.Type == "id");
+			var patient = _context.Patients.Include(c => c.Identity).Single(c => c.Identity.Id == userId.Value);
+
+			return patient;
+		}
+
+		public static Doctor GetDoctor(ClaimsPrincipal _caller, PharmaContext _context)
+		{
+			var test = _caller.Claims.ToList();
+			var userId = _caller.Claims.Single(c => c.Type == "id");
+			var doctor = _context.Doctors.Include(c => c.Identity).Single(c => c.Identity.Id == userId.Value);
+
+			return doctor;
 		}
 	}
 }

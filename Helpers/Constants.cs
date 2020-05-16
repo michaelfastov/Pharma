@@ -17,6 +17,7 @@ namespace Pharma.Helpers
 			public static class JwtClaims
 			{
 				public const string ApiAccess = "api_access";
+				public const string ApiDoctorAccess = "api_doctor_access";
 			}
 		}
 	}

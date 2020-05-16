@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
+using Pharma.ViewModels;
 
 namespace Pharma.Controllers
 {
@@ -30,7 +31,7 @@ namespace Pharma.Controllers
 		}
 
 		[HttpGet("GetDoctorRatingsByCategory/{category}")]
-		public ActionResult<IEnumerable<DoctorToDoctorRating>> GetDoctorRatingsByCategory(string category)
+		public ActionResult<IEnumerable<DoctorRatingViewModel>> GetDoctorRatingsByCategory(string category)
 		{
 			var result =
 				from doctorToDoctorRatings in _context.DoctorToDoctorRatings
@@ -39,12 +40,13 @@ namespace Pharma.Controllers
 					doctorRatings.DoctorRatingId
 				where doctors.Specialization == category && doctorRatings.Name == category
 				orderby doctorToDoctorRatings.RankingPlace
-				select new DoctorToDoctorRating
+				select new DoctorRatingViewModel
 				{
 					DoctorToDoctorRatingId = doctorToDoctorRatings.DoctorToDoctorRatingId,
 					DoctorId = doctorToDoctorRatings.DoctorId,
 					DoctorRatingId = doctorToDoctorRatings.DoctorRatingId,
-					RankingPlace = doctorToDoctorRatings.RankingPlace
+					RankingPlace = doctorToDoctorRatings.RankingPlace,
+					DoctorName = doctors.Name
 				};
 
 			var resultList = result.ToList();

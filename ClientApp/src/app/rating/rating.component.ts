@@ -16,7 +16,7 @@ export class RatingComponent implements OnInit {
 
   public ratings: Rating[];
   public ratingName: string;
-  public displayedColumns: string[] = ['rankingPlace', 'name'];
+  public displayedColumns: string[] = ['rankingPlace', 'doctorName'];
 
   constructor(private _avRoute: ActivatedRoute, private _ratingsService: RatingsService) {
     this.ratingName = this._avRoute.snapshot.params["ratingName"]; 

@@ -1,12 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { UserTypeService } from '../shared/services/user-type.service'
+import { UserService } from '../shared/services/user.service'
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent {
+export class NavMenuComponent implements OnInit, OnDestroy {
   isExpanded = false;
+  userType = "";
+  private userTypeSubscription: Subscription;
+
+  constructor(private userTypeService: UserTypeService, private userService: UserService) { }
+
+  ngOnInit() {
+    this.userTypeSubscription = this.userTypeService.userType.subscribe(m => {
+      this.userType = m;
+    });
+  }
+
+  ngOnDestroy() {
+    this.userTypeSubscription.unsubscribe();
+  }
 
   collapse() {
     this.isExpanded = false;
@@ -14,5 +32,9 @@ export class NavMenuComponent {
 
   toggle() {
     this.isExpanded = !this.isExpanded;
+  }
+
+  logout(){
+    this.userService.logout();
   }
 }

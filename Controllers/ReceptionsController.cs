@@ -143,7 +143,7 @@ namespace Pharma.Controllers
 				}
 			}
 
-			reception.PatientId = GetPatient().PatientId;
+			reception.PatientId = Utils.GetPatient(_caller, _context).PatientId;
 			reception.DayOfWeek = reception.Date.DayOfWeek.ToString();
 			_context.Receptions.Add(reception);
 			await _context.SaveChangesAsync();
@@ -176,14 +176,5 @@ namespace Pharma.Controllers
 		{
 			return _context.Receptions.Any(e => e.ReceptionId == id);
 		}
-
-		private Patient GetPatient()
-		{
-			var test = _caller.Claims.ToList();
-			var userId = _caller.Claims.Single(c => c.Type == "id");
-			var patient = _context.Patients.Include(c => c.Identity).Single(c => c.Identity.Id == userId.Value);
-
-			return patient;
 		}
-	}
 }

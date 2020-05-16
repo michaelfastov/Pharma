@@ -13,6 +13,7 @@ namespace Pharma.DbContext.Entities
 		public string Phone { get; set; }
 		public string Specialization { get; set; }
 		public double ReceptionPrice { get; set; }
+		//public bool IsDoctor { get; set; }
 		public string IdentityId { get; set; }
 		public AppUser Identity { get; set; }
 

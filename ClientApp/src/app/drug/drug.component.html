@@ -1,0 +1,40 @@
+<div *ngIf="userType=='Doctor'">
+    <h1>Prescribe Medicine</h1>
+    <mat-form-field>
+        <mat-label>Patient</mat-label>
+        <mat-select (selectionChange)="onPatientChange($event.value)">
+            <mat-option *ngFor="let patient of patients" [value]="patient">
+                {{patient.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <form class="example-form" (submit)="submitDrug()">
+        <mat-form-field class="example-full-width">
+            <mat-label>Add Drug</mat-label>
+            <input matInput [formControl]="drugFormControl" [errorStateMatcher]="matcher" placeholder="Drug Name">
+            <mat-hint>Fill the drug name field</mat-hint>
+            <mat-error *ngIf="drugFormControl.hasError('required')">
+                Drug Name is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+        <br>
+        <br>
+
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+    <br>
+
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="drugs">
+        <thead>
+            <tr>
+                <th>Drug Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let drug of drugs">
+                <td>{{ drug.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

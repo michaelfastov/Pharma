@@ -3,4 +3,5 @@ export interface Rating {
     DoctorId: number;
     DoctorRatingId: number;
     RankingPlace: number;
+    DoctorName: string;
 }
