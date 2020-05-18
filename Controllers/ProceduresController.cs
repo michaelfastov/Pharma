@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
+using Pharma.Helpers;
+using Pharma.ViewModels;
 
 namespace Pharma.Controllers
 {
@@ -15,10 +19,12 @@ namespace Pharma.Controllers
     public class ProceduresController : ControllerBase
     {
         private readonly PharmaContext _context;
+        private readonly ClaimsPrincipal _caller;
 
-        public ProceduresController(PharmaContext context)
+        public ProceduresController(PharmaContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
+	        _context = context;
+	        _caller = httpContextAccessor.HttpContext.User;
         }
 
         // GET: api/Procedures
@@ -46,6 +52,29 @@ namespace Pharma.Controllers
             }
 
             return procedure;
+        }
+
+        [Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+        [HttpGet("GetPatientsProcedures")]
+        public ActionResult<IEnumerable<PatientProceduresViewModel>> GetPatientsProcedures()
+        {
+	        var patient = Utils.GetPatient(_caller, _context);
+	        var result =
+		        from procedures in _context.Procedures
+		        join doctors in _context.Doctors on procedures.DoctorId equals doctors.DoctorId
+		        orderby doctors.Name
+		        select new PatientProceduresViewModel
+                {
+			        ProcedureId = procedures.ProcedureId,
+			        PatientId = procedures.PatientId,
+			        DoctorId = doctors.DoctorId,
+			        DoctorName = doctors.Name,
+			        Name = procedures.Name,
+			        Price = procedures.Price,
+			        Category = procedures.Category,
+		        };
+
+	        return Ok(result);
         }
 
         // PUT: api/Procedures/5
@@ -80,12 +109,12 @@ namespace Pharma.Controllers
             return NoContent();
         }
 
-        // POST: api/Procedures
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
         [HttpPost]
         public async Task<ActionResult<Procedure>> PostProcedure(Procedure procedure)
         {
+	        var doctor = Utils.GetDoctor(_caller, _context);
+	        procedure.DoctorId = doctor.DoctorId;
             _context.Procedures.Add(procedure);
             await _context.SaveChangesAsync();
 

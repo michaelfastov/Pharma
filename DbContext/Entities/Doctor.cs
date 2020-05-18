@@ -20,6 +20,7 @@ namespace Pharma.DbContext.Entities
 		public virtual ICollection<Reception> Receptions { get; set; }
 		public virtual ICollection<Document> Documents { get; set; }
 		public virtual ICollection<Drug> Drugs { get; set; }
+		public virtual ICollection<Procedure> Procedures { get; set; }
 		public virtual ICollection<DoctorToDoctorRating> DoctorToDoctorRating { get; set; }
 		public virtual ICollection<DoctorToHospital> DoctorToHospital { get; set; }
 	}

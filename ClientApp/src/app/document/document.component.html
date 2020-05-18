@@ -1,0 +1,24 @@
+<div *ngIf="userType=='Doctor'">
+    <h1>Add Documents</h1>
+    <mat-form-field>
+        <mat-label>Patient</mat-label>
+        <mat-select (selectionChange)="onPatientChange($event.value)">
+            <mat-option *ngFor="let patient of patients" [value]="patient">
+                {{patient.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <br>
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <form [formGroup]="exportFormGroup" fxFlex="70">
+            <mat-form-field fxFlexFill>
+                <input hidden type="file" accept=".pdf" #fileInput (change)="onFileChange($event)">
+                <input matInput placeholder="Document" formControlName="fileName" readonly (click)="fileInput.click()">
+
+            </mat-form-field>
+        </form>
+        <button [disabled]="exportFormGroup.invalid" mat-button color="primary" fxFlex="30" (click)="upload()">
+            Upload
+        </button>
+    </div>
+</div>

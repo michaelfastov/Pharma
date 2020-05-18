@@ -23,6 +23,7 @@ import { DoctorRating } from '../shared/models/doctor-rating';
 import { DoctorService } from '../shared/services/doctor.service';
 import { Patient } from '../shared/models/patient';
 import { Procedure } from '../shared/models/procedure';
+import { PatientProcedure } from '../shared/models/patient-procedure';
 import { ProcedureService } from '../shared/services/procedure.service';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -47,6 +48,7 @@ export class ProcedureComponent implements OnInit {
   selectedPatient: Patient;
   procedures: Procedure[];
   patients: Patient[];
+  patientProcedures: PatientProcedure[];
 
   procedureFormControl = new FormControl('', [
     Validators.required,
@@ -58,10 +60,11 @@ export class ProcedureComponent implements OnInit {
   ngOnInit() {
     this.userTypeSubscription = this.userTypeService.userType.subscribe(m => {
       this.userType = m;
-      console.log(this.userType);
-
       if (this.userType == 'Doctor') {
         this.GetDoctorsPatients();
+      }
+      if (this.userType == 'Patient') {
+        this.GetPatientsProcedures();
       }
     });
   }
@@ -73,6 +76,15 @@ export class ProcedureComponent implements OnInit {
   GetDoctorsPatients() {
     this.doctorService.GetDoctorsPatients().subscribe(data => {
       this.patients = data;
+    },
+      error => {
+        console.log(error);
+      });
+  }
+
+  GetPatientsProcedures() {
+    this.procedureService.GetPatientsProcedures().subscribe(data => {
+      this.patientProcedures = data;
     },
       error => {
         console.log(error);
@@ -93,6 +105,7 @@ export class ProcedureComponent implements OnInit {
     var procedure: Procedure = {
       ProcedureId: 0,
       PatientId: this.selectedPatient.patientId,
+      DoctorId: -1,
       Name: this.procedureFormControl.value,
       Price: -1,
       Category: ""

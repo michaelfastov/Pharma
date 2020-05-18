@@ -12,6 +12,7 @@ namespace Pharma.DbContext.Entities
 		public int DoctorId { get; set; }
 		public string Name { get; set; }
 		public string Comments { get; set; }
+		public string File { get; set; }
 
 		public virtual Patient Patient { get; set; }
 		public virtual Doctor Doctor { get; set; }

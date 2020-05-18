@@ -51,13 +51,13 @@ export class DrugService {
         return this._http.get(this.myAppUrl + "/Drugs/GetDrugsByPatientId/" + patientId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
-    GetDrugsByDoctorId(doctorId: number) {
-        let headers = new Headers();
-        headers.append('Content-Type', 'application/json');
-        let authToken = localStorage.getItem('auth_token');
-        headers.append('Authorization', `Bearer ${authToken}`);
-        return this._http.get(this.myAppUrl + "/Drugs/GetDrugsByDoctorId/" + doctorId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
-    }
+    // GetDrugsByDoctorId(doctorId: number) {
+    //     let headers = new Headers();
+    //     headers.append('Content-Type', 'application/json');
+    //     let authToken = localStorage.getItem('auth_token');
+    //     headers.append('Authorization', `Bearer ${authToken}`);
+    //     return this._http.get(this.myAppUrl + "/Drugs/GetDrugsByDoctorId/" + doctorId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    // }
 
     SaveDrug(drug: any) {
         let headers = new Headers();

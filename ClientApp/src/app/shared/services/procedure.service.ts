@@ -35,6 +35,14 @@ export class ProcedureService {
         return this._http.get(this.myAppUrl + "/Procedures", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
+    GetPatientsProcedures(){
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let authToken = localStorage.getItem('auth_token');
+        headers.append('Authorization', `Bearer ${authToken}`);
+        return this._http.get(this.myAppUrl + "/Procedures/GetPatientsProcedures", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    }
+
     GetProceduresByPatientId(patientId: number) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');

@@ -37,6 +37,7 @@ import { MatTableModule } from '@angular/material/table';
 import { DrugComponent } from './drug/drug.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { ProcedureComponent } from './procedure/procedure.component';
+import { DocumentComponent } from './document/document.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ProcedureComponent } from './procedure/procedure.component';
     ReceptionComponent,
     RatingComponent,
     DrugComponent,
-    ProcedureComponent
+    ProcedureComponent,
+    DocumentComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -74,7 +76,8 @@ import { ProcedureComponent } from './procedure/procedure.component';
       { path: 'reception', component: ReceptionComponent },
       { path: 'rating/:ratingName', component: RatingComponent },
       { path: 'drug', component: DrugComponent },
-      { path: 'procedure', component: ProcedureComponent }
+      { path: 'procedure', component: ProcedureComponent },
+      { path: 'document', component: DocumentComponent },
     ]),
     BrowserAnimationsModule
   ],
