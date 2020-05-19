@@ -14,11 +14,46 @@
             <mat-form-field fxFlexFill>
                 <input hidden type="file" accept=".pdf" #fileInput (change)="onFileChange($event)">
                 <input matInput placeholder="Document" formControlName="fileName" readonly (click)="fileInput.click()">
-
             </mat-form-field>
         </form>
         <button [disabled]="exportFormGroup.invalid" mat-button color="primary" fxFlex="30" (click)="upload()">
             Upload
         </button>
     </div>
+    <br>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="documents">
+        <thead>
+            <tr>
+                <th>Document Name</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let document of documents">
+                <td>{{ document.name }}</td>
+                <td><button mat-raised-button color="primary" (click)="download(document.documentId)">Download</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div *ngIf="userType=='Patient'">
+    <h1>Documents</h1>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientDocuments">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Document</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let patientDocument of patientDocuments">
+                <td>{{ patientDocument.doctorName }}</td>
+                <td>{{ patientDocument.name }}</td>
+                <td><button mat-raised-button color="primary" (click)="download(patientDocument.documentId)">Download</button>
+            </tr>
+        </tbody>
+    </table>
 </div>

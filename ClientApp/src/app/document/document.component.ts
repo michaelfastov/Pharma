@@ -4,6 +4,8 @@ import { DocumentService } from '../shared/services/document.service';
 import { Document } from '../shared/models/document';
 import { Subscription } from 'rxjs';
 import { Patient } from '../shared/models/patient';
+import { PatientDocument } from '../shared/models/patient-document';
+
 import { DoctorService } from '../shared/services/doctor.service';
 
 import { UserTypeService } from '../shared/services/user-type.service'
@@ -19,13 +21,16 @@ export class DocumentComponent implements OnInit {
   //public idInput = new FormControl('', Validators.compose([Validators.required, Validators.min(1)]));
   patients: Patient[];
   selectedPatient: Patient;
+  documents: Document[];
+  patientDocuments: PatientDocument[];
+
 
   exportFormGroup = this._fb.group({
     fileName: [null, Validators.required],
     file: [null, Validators.required]
   });
 
-  constructor(private userTypeService: UserTypeService, private doctorService: DoctorService, 
+  constructor(private userTypeService: UserTypeService, private doctorService: DoctorService,
     private _cd: ChangeDetectorRef,
     private _fb: FormBuilder,
     private documentService: DocumentService) {
@@ -39,7 +44,7 @@ export class DocumentComponent implements OnInit {
         this.GetDoctorsPatients();
       }
       if (this.userType == 'Patient') {
-      //  this.GetPatientsProcedures();
+        this.GetPatientsDocuments();
       }
     });
   }
@@ -48,14 +53,23 @@ export class DocumentComponent implements OnInit {
     this.userTypeSubscription.unsubscribe();
   }
 
+  GetPatientsDocuments() {
+    this.documentService.GetPatientsDocuments().subscribe(data => {
+      this.patientDocuments = data;
+    },
+      error => {
+        console.log(error);
+      });
+  }
+
   onPatientChange(patient) {
     this.selectedPatient = patient;
-    // this.procedureService.GetProceduresByPatientId(patient.patientId).subscribe(data => {
-    //   this.procedures = data;
-    // },
-    //   error => {
-    //     console.log(error);
-    //   });
+    this.documentService.GetDocumentsByPatientId(patient.patientId).subscribe(data => {
+      this.documents = data;
+    },
+      error => {
+        console.log(error);
+      });
   }
 
   GetDoctorsPatients() {
@@ -84,9 +98,9 @@ export class DocumentComponent implements OnInit {
     }
   }
 
-  // public download(): void {
-  //   this.documentService.exportTestSuite(this.idInput.value);
-  // }
+  public download(documentId: number): void {
+    this.documentService.GetFileByDocumentId(documentId);
+  }
 
   public upload(): void {
     var document: Document = {
@@ -100,8 +114,7 @@ export class DocumentComponent implements OnInit {
 
     this.documentService.SaveDocument(document).subscribe(
       () => {
-        //this._alertService.success(`Test Suite '${this.exportFormGroup.get('fileName').value}' successfully imported`);
-        //this.dialogRef.close();
+        this.onPatientChange(this.selectedPatient);
       }
     );
   }
