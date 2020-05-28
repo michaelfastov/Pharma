@@ -43,6 +43,22 @@ export class DoctorService {
         return this._http.get(this.myAppUrl + "/Doctors/GetDoctorsByCategory/" + category, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
     }
 
+    GetDoctorsHospitals(doctorId: number) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let authToken = localStorage.getItem('auth_token');
+        headers.append('Authorization', `Bearer ${authToken}`);
+        return this._http.get(this.myAppUrl + "/Doctors/GetDoctorsHospitals/" + doctorId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    }
+
+    GetDoctorById(doctorId: number) {
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        let authToken = localStorage.getItem('auth_token');
+        headers.append('Authorization', `Bearer ${authToken}`);
+        return this._http.get(this.myAppUrl + "/Doctors/" + doctorId, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    }
+
     GetDoctorsByHospitalIdAndCategory(hospitalId: number, category: string) {
         let headers = new Headers();
         headers.append('Content-Type', 'application/json');

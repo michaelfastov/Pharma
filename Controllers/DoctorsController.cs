@@ -33,6 +33,15 @@ namespace Pharma.Controllers
 			return await _context.Doctors.ToListAsync();
 		}
 
+		[HttpGet("GetDoctorsHospitals/{doctorId}")]
+		public ActionResult<IEnumerable<Hospital>> GetDoctorsHospitals(int doctorId)
+		{
+			return Ok(_context.Hospitals.Where(d => _context.DoctorToHospitals.Where(dth => doctorId == dth.DoctorId)
+					.Select(dth => dth.HospitalId)
+					.Contains(d.HospitalId))
+				.ToList());
+		}
+
 		[HttpGet("GetDoctorsByCategory/{category}")]
 		public ActionResult<IEnumerable<Doctor>> GetDoctorsByCategory([FromRoute] string category)
 		{

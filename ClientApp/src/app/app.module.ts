@@ -74,6 +74,7 @@ import { DocumentComponent } from './document/document.component';
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'doctor-ratings', component: DoctorRatingsComponent },
       { path: 'reception', component: ReceptionComponent },
+      { path: 'reception/:doctorId', component: ReceptionComponent },
       { path: 'rating/:ratingName', component: RatingComponent },
       { path: 'drug', component: DrugComponent },
       { path: 'procedure', component: ProcedureComponent },

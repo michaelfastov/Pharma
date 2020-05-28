@@ -21,12 +21,14 @@
       <tr>
         <th>Place</th>
         <th>Doctor Name</th>
+        <th>Reception</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let rating of ratings">
         <td>{{ rating.rankingPlace }}</td>
         <td>{{ rating.doctorName }}</td>
+        <td><a [routerLink]="['/reception/', rating.doctorId]">Sign</a></td>
       </tr>
     </tbody>
   </table>

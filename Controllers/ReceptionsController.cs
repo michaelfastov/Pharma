@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
 using Pharma.Helpers;
+using Pharma.Models.LiqPay;
 using Pharma.ViewModels;
 
 namespace Pharma.Controllers
@@ -34,6 +35,12 @@ namespace Pharma.Controllers
 		public async Task<ActionResult<IEnumerable<Reception>>> GetReceptions()
 		{
 			return await _context.Receptions.ToListAsync();
+		}
+
+		[HttpGet("GetLiqPayModel/{doctorId}")]
+		public LiqPayCheckoutFormModel GetLiqPayModel(int doctorId)
+		{
+			return LiqPayHelper.GetLiqPayModel(Guid.NewGuid().ToString(), Convert.ToInt32(_context.Doctors.First(d=> d.DoctorId == doctorId).ReceptionPrice));
 		}
 
 		// GET: api/Receptions/5
