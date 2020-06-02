@@ -47,10 +47,18 @@ export class DocumentComponent implements OnInit {
         this.GetPatientsDocuments();
       }
     });
+    // this.userType = localStorage.getItem('user_type');
+    // if (this.userType == 'Doctor') {
+    //   this.GetDoctorsPatients();
+    // }
+    // if (this.userType == 'Patient') {
+    //   this.GetPatientsDocuments();
+    // }
+
   }
 
   ngOnDestroy() {
-    this.userTypeSubscription.unsubscribe();
+    //this.userTypeSubscription.unsubscribe();
   }
 
   GetPatientsDocuments() {

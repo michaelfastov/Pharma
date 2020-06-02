@@ -23,6 +23,9 @@ import { DoctorRating } from '../shared/models/doctor-rating';
 import { HospitalsService } from '../shared/services/hospitals.service';
 import { Hospital } from '../shared/models/hospital';
 import { Reception } from '../shared/models/reception';
+import { DoctorReception } from '../shared/models/doctor-reception';
+
+
 import { Subscription } from 'rxjs';
 import { UserTypeService } from '../shared/services/user-type.service'
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
@@ -64,6 +67,7 @@ export class ReceptionComponent implements OnInit {
   public selectedHospital: Hospital;
   public selectedDate: string;
   public selectedTime: string;
+  public doctorReceptions: DoctorReception[] = [];
 
   date = new FormControl(new Date());
   serializedDate = new FormControl((new Date()).toISOString());
@@ -73,22 +77,20 @@ export class ReceptionComponent implements OnInit {
     //globals.TeamId=this._Activatedroute.snapshot.params['teamID'];
     // translate.setDefaultLang('en');
     this.doctorId = this._avRoute.snapshot.params["doctorId"];
-
-    this.getCategories();
   }
 
   ngOnInit() {
     this.userTypeSubscription = this.userTypeService.userType.subscribe(m => {
       this.userType = m;
+      console.log(this.userType)
       if (this.userType == 'Doctor') {
-        //this.GetDoctorsPatients();
+        this.getDoctorsReceptions();
       }
       if (this.userType == 'Patient') {
-        //this.GetPatientsDocuments();
-      }//this.userType == 'Patient' && 
-      if (this.userType == 'Patient' && this.doctorId != -1) {
+        this.getCategories();
+      }
+      if (this.userType == 'Patient' && this.doctorId != undefined) {
         this._doctorService.GetDoctorById(this.doctorId).subscribe(data => {
-          debugger;
           this.receptionFormGroup.get('category').setValue(data.specialization);
           this.selectedCategory = data.specialization;
           this.onCategorychange(this.selectedCategory);
@@ -106,10 +108,46 @@ export class ReceptionComponent implements OnInit {
           });
       }
     });
+
+    // this.userType = localStorage.getItem('user_type');
+    // if (this.userType == 'Doctor') {
+    //   //this.GetDoctorsPatients();
+    // }
+    // if (this.userType == 'Patient') {
+    //   //this.GetPatientsDocuments();
+    // }//this.userType == 'Patient' && 
+    // if (this.userType == 'Patient' && this.doctorId != -1) {
+    //   this._doctorService.GetDoctorById(this.doctorId).subscribe(data => {
+    //     debugger;
+    //     this.receptionFormGroup.get('category').setValue(data.specialization);
+    //     this.selectedCategory = data.specialization;
+    //     this.onCategorychange(this.selectedCategory);
+    //     this.receptionFormGroup.get('doctor').setValue(data);
+    //     this.selectedDoctor = data;
+    //     this.doctors.push(this.selectedDoctor);
+    //     this.GetDoctorsHospitals(this.selectedDoctor.doctorId);
+    //     //this.receptionFormGroup.controls.category.setValue(data.specialization);
+
+    //     // this.selectedDoctor = data;
+    //     // this.selectedCategory = data.specialization;
+    //   },
+    //     error => {
+    //       console.log(error);
+    //     });
+    // }
   }
   // switchLanguage(language: string) {
   //   this.translate.use(language);
   // }
+
+  getDoctorsReceptions() {
+    this._receptionService.GetDoctorsReceptions().subscribe(data => {
+      this.doctorReceptions = data;
+    },
+      error => {
+        console.log(error);
+      });
+  }
 
   getDoctors() {
     this._doctorService.GetDoctorsByHospitalIdAndCategory(this.selectedHospital.hospitalId, this.selectedCategory).subscribe(data => {
@@ -217,7 +255,7 @@ export class ReceptionComponent implements OnInit {
 
     // Set to true if you need the website to include cookies in the requests sent
     // to the API (e.g. in case you use sessions)
-  //  res.setHeader('Access-Control-Allow-Credentials', true);
+    //  res.setHeader('Access-Control-Allow-Credentials', true);
     // this.payForm.value.data = this.data;
     // this.payForm.value.signature = this.signature;
     console.log(JSON.stringify(this.liqPayModel))

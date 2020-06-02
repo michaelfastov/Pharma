@@ -15,7 +15,6 @@ using Pharma.ViewModels;
 
 namespace Pharma.Controllers
 {
-	[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
 	[Route("api/[controller]")]
 	[ApiController]
 	public class ReceptionsController : ControllerBase
@@ -40,7 +39,7 @@ namespace Pharma.Controllers
 		[HttpGet("GetLiqPayModel/{doctorId}")]
 		public LiqPayCheckoutFormModel GetLiqPayModel(int doctorId)
 		{
-			return LiqPayHelper.GetLiqPayModel(Guid.NewGuid().ToString(), Convert.ToInt32(_context.Doctors.First(d=> d.DoctorId == doctorId).ReceptionPrice));
+			return LiqPayHelper.GetLiqPayModel(Guid.NewGuid().ToString(), Convert.ToInt32(_context.Doctors.First(d => d.DoctorId == doctorId).ReceptionPrice));
 		}
 
 		// GET: api/Receptions/5
@@ -67,6 +66,37 @@ namespace Pharma.Controllers
 		public async Task<ActionResult<IEnumerable<Reception>>> GetReceptionsByPatientId([FromRoute] int patientId)
 		{
 			return await _context.Receptions.Where(r => r.PatientId == patientId).ToListAsync();
+		}
+
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
+		[HttpGet("GetDoctorsReceptions")]
+		public ActionResult<IEnumerable<DoctorReceptionViewModel>> GetDoctorsReceptions()
+		{
+			var doctor = Utils.GetDoctor(_caller, _context);
+
+			var result =
+				from reception in _context.Receptions
+				join patient in _context.Patients on reception.PatientId equals patient.PatientId
+				where reception.DoctorId == doctor.DoctorId
+				orderby reception.Date
+				select new DoctorReceptionViewModel
+				{
+					ReceptionId = reception.ReceptionId,
+					PatientId = reception.PatientId,
+					DoctorId = reception.DoctorId,
+					HospitalId = reception.HospitalId,
+					Time = reception.Time,
+					Duration = reception.Duration,
+					Date = reception.Date,
+					DayOfWeek = reception.DayOfWeek,
+					Address = reception.Address,
+					Purpose = reception.Purpose,
+					Result = reception.Result,
+					Price = reception.Price,
+					PatientName = patient.Name
+				};
+
+			return Ok(result);
 		}
 
 		[HttpGet("GetAvailableReceptionTime/{doctorId}/{date}")]
@@ -131,18 +161,31 @@ namespace Pharma.Controllers
 		// POST: api/Receptions
 		// To protect from overposting attacks, enable the specific properties you want to bind to, for
 		// more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
 		[HttpPost]
 		public async Task<ActionResult<Reception>> PostReception(ReceptionViewModel receptionViewModel)
 		{
 			var reception = receptionViewModel.ToReception();
-			if (_context.Receptions.ToList().Any())
+			if (_context.Receptions.Where(r => r.DoctorId == reception.DoctorId).ToList().Any())
 			{
-				var doctorsReceptions = _context.Receptions.Where(r =>
-					r.DoctorId == reception.DoctorId &&
-					DateTime.Compare(r.Date.Date, reception.Date.Date) == 0 &&
-					!((r.Time < reception.Time && r.Time + r.Duration > reception.Time) ||
-					  (reception.Time < r.Time && reception.Time + reception.Duration > r.Time))
-				).ToList();
+				var doctorsReceptions = new List<Reception>();
+				//var doctorsReceptions = _context.Receptions.Where(r =>
+				//	r.DoctorId == reception.DoctorId &&
+				//	DateTime.Compare(r.Date.Date, reception.Date.Date) == 0 &&
+				//	!((r.Time < reception.Time && r.Time + r.Duration > reception.Time) ||
+				//	  (reception.Time < r.Time && reception.Time + reception.Duration > r.Time))
+				//).ToList();
+
+				foreach (var r in _context.Receptions.Where(r => r.DoctorId == reception.DoctorId).ToList())
+				{
+					if (r.DoctorId == reception.DoctorId &&
+						DateTime.Compare(r.Date.Date, reception.Date.Date) == 0 &&
+						((r.Time <= reception.Time && r.Time + r.Duration >= reception.Time) ||
+						(reception.Time <= r.Time && reception.Time + reception.Duration >= r.Time)))
+					{
+						doctorsReceptions.Add(r);
+					}
+				}
 
 				if (doctorsReceptions.Any())
 				{
@@ -183,5 +226,5 @@ namespace Pharma.Controllers
 		{
 			return _context.Receptions.Any(e => e.ReceptionId == id);
 		}
-		}
+	}
 }

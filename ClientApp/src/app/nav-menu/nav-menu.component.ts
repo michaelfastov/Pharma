@@ -20,6 +20,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
     this.userTypeSubscription = this.userTypeService.userType.subscribe(m => {
       this.userType = m;
     });
+    //this.userType = localStorage.getItem('user_type');
   }
 
   ngOnDestroy() {
@@ -35,6 +36,7 @@ export class NavMenuComponent implements OnInit, OnDestroy {
   }
 
   logout(){
+    this.userType = "No User";
     this.userService.logout();
   }
 }

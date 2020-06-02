@@ -57,7 +57,9 @@ export class UserService extends BaseService {
       .map(res => res.json())
       .map(res => {
         localStorage.setItem('auth_token', res.auth_token);
-        this._userTypeService.setUserType(res.user_type);
+      //  localStorage.setItem('user_type', res.user_type);
+
+       this._userTypeService.setUserType(res.user_type);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
         return true;
@@ -69,7 +71,9 @@ export class UserService extends BaseService {
     localStorage.removeItem('auth_token');
     this.loggedIn = false;
     this._authNavStatusSource.next(false);
-    this._userTypeService.setUserType("No User");
+
+    localStorage.setItem('user_type', "No User");
+    //this._userTypeService.setUserType("No User");
   }
 
   isLoggedIn() {

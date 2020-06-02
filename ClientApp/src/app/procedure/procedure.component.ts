@@ -67,10 +67,18 @@ export class ProcedureComponent implements OnInit {
         this.GetPatientsProcedures();
       }
     });
+
+    // this.userType = localStorage.getItem('user_type');
+    // if (this.userType == 'Doctor') {
+    //   this.GetDoctorsPatients();
+    // }
+    // if (this.userType == 'Patient') {
+    //   this.GetPatientsProcedures();
+    // }
   }
 
   ngOnDestroy() {
-    this.userTypeSubscription.unsubscribe();
+    //this.userTypeSubscription.unsubscribe();
   }
 
   GetDoctorsPatients() {

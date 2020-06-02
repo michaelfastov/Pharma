@@ -1,37 +1,37 @@
-<h1>Pick a reception</h1>
-
-
-<div fxLayout="row" fxLayoutAlign="start center">
-    <form [formGroup]="receptionFormGroup" fxFlex="70">
-        <mat-form-field>
-            <mat-label>Category</mat-label>
-            <mat-select (selectionChange)="onCategorychange($event.value)" formControlName="category">
-                <mat-option *ngFor="let category of categories" [value]="category.name">
-                    {{category.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field>
-            <mat-label>Hospital</mat-label>
-            <mat-select (selectionChange)="onHospitalchange($event.value)" formControlName="hospital">
-                <mat-option *ngFor="let hospital of hospitals" [value]="hospital">
-                    {{hospital.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <br>
-        <mat-form-field>
-            <mat-label>Doctor</mat-label>
-            <mat-select (selectionChange)="onDoctorChange($event.value)" formControlName="doctor">
-                <mat-option *ngFor="let doctor of doctors" [value]="doctor">
-                    {{doctor.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-        <p *ngIf="selectedDoctor">Reception price for selected doctor is <b>{{selectedDoctor.receptionPrice}}$</b></p>
-        <div *ngIf="liqPayModel">
-            <!-- <form [formGroup]="payForm" (ngSubmit)="LiqPay()">
+<div *ngIf="userType=='Patient'">
+    <h1>Pick a reception</h1>
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <form [formGroup]="receptionFormGroup" fxFlex="70">
+            <mat-form-field>
+                <mat-label>Category</mat-label>
+                <mat-select (selectionChange)="onCategorychange($event.value)" formControlName="category">
+                    <mat-option *ngFor="let category of categories" [value]="category.name">
+                        {{category.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Hospital</mat-label>
+                <mat-select (selectionChange)="onHospitalchange($event.value)" formControlName="hospital">
+                    <mat-option *ngFor="let hospital of hospitals" [value]="hospital">
+                        {{hospital.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Doctor</mat-label>
+                <mat-select (selectionChange)="onDoctorChange($event.value)" formControlName="doctor">
+                    <mat-option *ngFor="let doctor of doctors" [value]="doctor">
+                        {{doctor.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <p *ngIf="selectedDoctor">Reception price for selected doctor is <b>{{selectedDoctor.receptionPrice}}$</b>
+            </p>
+            <div *ngIf="liqPayModel">
+                <!-- <form [formGroup]="payForm" (ngSubmit)="LiqPay()">
                  <input type="hidden" name="data" value="liqPayModel.Data" />
                 <input type="hidden" name="signature" value="liqPayModel.Signature" />
                 <button style="border: none !important; display:inline-block !important;text-align: center !important;padding: 7px 20px !important;
@@ -53,7 +53,7 @@
                     <span style="vertical-align:middle !important">Pay</span>
                 </button>
             </form> -->
-            <!-- <form [formGroup]="payForm" (ngSubmit)="pay()" accept-charset="utf-8">
+                <!-- <form [formGroup]="payForm" (ngSubmit)="pay()" accept-charset="utf-8">
                 <input formControlName="data" type="hidden" name="data" value="{{liqPayModel.data}}" />
                 <input formControlName="signature" type="hidden" name="signature" value="{{liqPayModel.signature}}" />
 
@@ -63,78 +63,55 @@
                     <span style="vertical-align:middle !important">Pay</span>
                 </button>
             </form> -->
-            <form #form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
-                <input  name="data" value="{{liqPayModel.data}}" />
-                <input  name="signature" value="{{liqPayModel.signature}}" />
-                <input type="image" (click)="form.submit()" src="//static.liqpay.ua/buttons/p1ru.radius.png" />
-         </form>
-        </div>
+                <form #form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
+                    <input name="data" value="{{liqPayModel.data}}" />
+                    <input name="signature" value="{{liqPayModel.signature}}" />
+                    <input type="image" (click)="form.submit()" src="//static.liqpay.ua/buttons/p1ru.radius.png" />
+                </form>
+            </div>
 
-        <br>
-        <mat-form-field>
-            <mat-label>Choose a date</mat-label>
-            <input matInput [matDatepicker]="picker" (dateInput)="OnDateChange($event.value)" [value]="date.value"
-                formControlName="date">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <br>
-        <mat-form-field>
-            <mat-label>Time</mat-label>
-            <mat-select (selectionChange)="onTimeChange($event.value)" formControlName="time">
-                <mat-option *ngFor="let ah of availableHours" [value]="ah">
-                    {{ah}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-    </form>
-    <button mat-raised-button color="primary" (click)="submitReception()">Submit</button>
+            <br>
+            <mat-form-field>
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker" (dateInput)="OnDateChange($event.value)" [value]="date.value"
+                    formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <br>
+            <mat-form-field>
+                <mat-label>Time</mat-label>
+                <mat-select (selectionChange)="onTimeChange($event.value)" formControlName="time">
+                    <mat-option *ngFor="let ah of availableHours" [value]="ah">
+                        {{ah}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+        <button mat-raised-button color="primary" (click)="submitReception()">Submit</button>
+    </div>
 </div>
 
-
-
-<!-- <mat-form-field>
-    <mat-label>Category</mat-label>
-    <mat-select (selectionChange)="onCategorychange($event.value)">
-        <mat-option *ngFor="let category of categories" [value]="category.name">
-            {{category.name}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<br>
-<mat-form-field>
-    <mat-label>Hospital</mat-label>
-    <mat-select (selectionChange)="onHospitalchange($event.value)">
-        <mat-option *ngFor="let hospital of hospitals" [value]="hospital">
-            {{hospital.name}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<br>
-<mat-form-field>
-    <mat-label>Doctor</mat-label>
-    <mat-select (selectionChange)="onDoctorChange($event.value)">
-        <mat-option *ngFor="let doctor of doctors" [value]="doctor">
-            {{doctor.name}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<p *ngIf="selectedDoctor">Reception price for selected doctor is <b>{{selectedDoctor.receptionPrice}}$</b></p>
-<br>
-<mat-form-field>
-    <mat-label>Choose a date</mat-label>
-    <input matInput [matDatepicker]="picker" (dateInput)="OnDateChange($event.value)" [value]="date.value">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-</mat-form-field>
-<br>
-<mat-form-field>
-    <mat-label>Time</mat-label>
-    <mat-select (selectionChange)="onTimeChange($event.value)">
-        <mat-option *ngFor="let ah of availableHours" [value]="ah">
-            {{ah}}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<br>
-<button mat-raised-button color="primary" (click)="submitReception()">Submit</button> -->
+<div *ngIf="userType=='Doctor'">
+    <h1>Receptions</h1>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="doctorReceptions">
+        <thead>
+            <tr>
+                <th>Patient Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Address</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let doctorReception of doctorReceptions">
+                <td>{{ doctorReception.patientName }}</td>
+                <td>{{ doctorReception.date }}</td>
+                <td>{{ doctorReception.time }}</td>
+                <td>{{ doctorReception.address }}</td>
+                <td>{{ doctorReception.purpose }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
