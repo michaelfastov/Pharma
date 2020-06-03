@@ -19,6 +19,8 @@ namespace Pharma.DbContext.Entities
 		public string Purpose { get; set; }
 		public string Result { get; set; }
 		public int Price { get; set; }
+		public string PaymentId { get; set; }
+		public bool IsPayed { get; set; }
 
 		public virtual Patient Patient { get; set; }
 		public virtual Doctor Doctor { get; set; }

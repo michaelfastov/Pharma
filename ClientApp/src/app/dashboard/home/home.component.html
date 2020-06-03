@@ -1,15 +1,14 @@
-
-<div class="row">
-    <div class="col-md-6 col-sm-3">
-      <p>{{homeDetails?.message}}</p>
-      <p><strong>Name:</strong> {{homeDetails?.name}} {{homeDetails?.surname}}</p>
-
-      <div *ngIf="homeDetails?.pictureUrl"><img src="{{homeDetails?.pictureUrl}}" /></div>  
-    </div>
-  </div>
-  
-   
-   
-   
-    
-  
+<div *ngIf="userType=='Patient' && patient">
+  <h1>Patient</h1>
+  <p>{{patient.surname}} {{patient.name}}</p>
+  <p>Born: {{patient.formatedDOB}}</p>
+  <p>Address: {{patient.address}}</p>
+  <p>Contact: {{patient.phone}} </p>
+</div>
+<div *ngIf="userType=='Doctor' && doctor">
+  <h1>Doctor</h1>
+  <p>{{doctor.surname}} {{doctor.name}}</p>
+  <p>Specialization: {{doctor.specialization}}</p>
+  <p>Reception Price: {{doctor.receptionPrice}}</p>
+  <p>Contact: {{doctor.phone}} </p>
+</div>

@@ -38,8 +38,7 @@ namespace Pharma.Models.LiqPay
                 order_id = order_id,
                 sandbox = 1,
 
-                result_url = "https://localhost:44321/",
-
+                result_url = "https://localhost:44321/api/Receptions/UpdatePayedReception",
             };
             var json_string = JsonConvert.SerializeObject(signature_source);
             var data_hash = Convert.ToBase64String(Encoding.UTF8.GetBytes(json_string));

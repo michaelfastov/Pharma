@@ -6,8 +6,9 @@ using Pharma.DbContext.Entities;
 
 namespace Pharma.ViewModels
 {
-	public class DoctorReceptionViewModel: Reception
+	public class UserReceptionViewModel: Reception
 	{
-		public string PatientName { get; set; }
+		public string Name { get; set; }
+		public string FormatedDate { get; set; }
 	}
 }

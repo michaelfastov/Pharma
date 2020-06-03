@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
 using Pharma.Helpers;
@@ -68,9 +70,57 @@ namespace Pharma.Controllers
 			return await _context.Receptions.Where(r => r.PatientId == patientId).ToListAsync();
 		}
 
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+		[HttpGet("GetPatientsReceptions")]
+		public ActionResult<IEnumerable<PatientReceptionViewModel>> GetPatientsReceptions()
+		{
+			var patient = Utils.GetPatient(_caller, _context);
+
+			var result =
+				from reception in _context.Receptions
+				join doctor in _context.Doctors on reception.DoctorId equals doctor.DoctorId
+				where reception.PatientId == patient.PatientId
+				orderby reception.Date
+				select new PatientReceptionViewModel
+				{
+					ReceptionId = reception.ReceptionId,
+					PatientId = reception.PatientId,
+					DoctorId = reception.DoctorId,
+					HospitalId = reception.HospitalId,
+					Time = reception.Time,
+					Duration = reception.Duration,
+					FormatedDate = $"{reception.Date.Day}/{reception.Date.Month}/{reception.Date.Year}",
+					DayOfWeek = reception.DayOfWeek,
+					Address = reception.Address,
+					Purpose = reception.Purpose,
+					Result = reception.Result,
+					Price = reception.Price,
+					Name = doctor.Name,
+					PaymentId = reception.PaymentId,
+					IsPayed = reception.IsPayed
+				};
+
+			var receptions = result.ToList();
+			for (var i = 0; i < receptions.Count; i++)
+			{
+				var paymentId = Guid.NewGuid().ToString();
+				var liqPayModel = LiqPayHelper.GetLiqPayModel(paymentId, Convert.ToInt32(receptions[i].Price));
+				receptions[i].Data = liqPayModel.Data;
+				receptions[i].Signature = liqPayModel.Signature;
+
+				var receptionToUpdate = _context.Receptions.Find(receptions[i].ReceptionId);
+				receptionToUpdate.PaymentId = paymentId;
+				_context.Entry(receptionToUpdate).State = EntityState.Modified;
+			}
+
+			_context.SaveChangesAsync();
+
+			return Ok(receptions);
+		}
+
 		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
 		[HttpGet("GetDoctorsReceptions")]
-		public ActionResult<IEnumerable<DoctorReceptionViewModel>> GetDoctorsReceptions()
+		public ActionResult<IEnumerable<UserReceptionViewModel>> GetDoctorsReceptions()
 		{
 			var doctor = Utils.GetDoctor(_caller, _context);
 
@@ -79,7 +129,7 @@ namespace Pharma.Controllers
 				join patient in _context.Patients on reception.PatientId equals patient.PatientId
 				where reception.DoctorId == doctor.DoctorId
 				orderby reception.Date
-				select new DoctorReceptionViewModel
+				select new UserReceptionViewModel
 				{
 					ReceptionId = reception.ReceptionId,
 					PatientId = reception.PatientId,
@@ -87,13 +137,14 @@ namespace Pharma.Controllers
 					HospitalId = reception.HospitalId,
 					Time = reception.Time,
 					Duration = reception.Duration,
-					Date = reception.Date,
+					FormatedDate = $"{reception.Date.Day}/{reception.Date.Month}/{reception.Date.Year}",
 					DayOfWeek = reception.DayOfWeek,
 					Address = reception.Address,
 					Purpose = reception.Purpose,
 					Result = reception.Result,
 					Price = reception.Price,
-					PatientName = patient.Name
+					Name = patient.Name,
+					IsPayed = reception.IsPayed
 				};
 
 			return Ok(result);
@@ -109,12 +160,6 @@ namespace Pharma.Controllers
 
 			var hours = Utils.GetWorkingHours();
 
-			//var hours = new List<string>
-			//{
-			//	"08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30",
-			//	"13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00"
-			//};
-
 			foreach (var r in receptions)
 			{
 				if (hours.Contains(r.Time.ToString()))
@@ -124,6 +169,35 @@ namespace Pharma.Controllers
 			}
 
 			return Ok(hours);
+		}
+
+		[HttpPost("UpdatePayedReception")]
+		public ActionResult UpdatePayedReception()
+		{
+			var requestDictionary = Request.Form.Keys.ToDictionary(key => key, key => Request.Form[key]);
+
+			var requestData = Convert.FromBase64String(requestDictionary["data"]);
+			var decodedString = Encoding.UTF8.GetString(requestData);
+			var requestDataDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(decodedString);
+
+			var signature = LiqPayHelper.GetLiqPaySignature(requestDictionary["data"]);
+
+			if (signature != requestDictionary["signature"])
+				return BadRequest();
+
+			if (requestDataDictionary["status"] == "sandbox" || requestDataDictionary["status"] == "success")
+			{
+				var receptionToUpdate = _context.Receptions.FirstOrDefault(r => r.PaymentId == requestDataDictionary["order_id"]);
+				if (receptionToUpdate != null)
+				{
+					receptionToUpdate.IsPayed = true;
+					_context.Entry(receptionToUpdate).State = EntityState.Modified;
+					_context.SaveChangesAsync();
+
+				}
+			}
+
+			return Ok(new object());
 		}
 
 		// PUT: api/Receptions/5
@@ -169,12 +243,6 @@ namespace Pharma.Controllers
 			if (_context.Receptions.Where(r => r.DoctorId == reception.DoctorId).ToList().Any())
 			{
 				var doctorsReceptions = new List<Reception>();
-				//var doctorsReceptions = _context.Receptions.Where(r =>
-				//	r.DoctorId == reception.DoctorId &&
-				//	DateTime.Compare(r.Date.Date, reception.Date.Date) == 0 &&
-				//	!((r.Time < reception.Time && r.Time + r.Duration > reception.Time) ||
-				//	  (reception.Time < r.Time && reception.Time + reception.Duration > r.Time))
-				//).ToList();
 
 				foreach (var r in _context.Receptions.Where(r => r.DoctorId == reception.DoctorId).ToList())
 				{
@@ -193,6 +261,7 @@ namespace Pharma.Controllers
 				}
 			}
 
+			reception.IsPayed = false;
 			reception.PatientId = Utils.GetPatient(_caller, _context).PatientId;
 			reception.DayOfWeek = reception.Date.DayOfWeek.ToString();
 			_context.Receptions.Add(reception);

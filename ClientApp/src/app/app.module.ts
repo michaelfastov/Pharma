@@ -35,9 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { RatingComponent } from './rating/rating.component';
 import { MatTableModule } from '@angular/material/table';
 import { DrugComponent } from './drug/drug.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProcedureComponent } from './procedure/procedure.component';
 import { DocumentComponent } from './document/document.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { DocumentComponent } from './document/document.component';
     MatInputModule,
     MatButtonModule,
     MatTableModule,
+    MatIconModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },

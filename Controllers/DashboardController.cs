@@ -11,12 +11,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pharma.DbContext;
 using Pharma.DbContext.Entities;
+using Pharma.Helpers;
+using Pharma.ViewModels;
 
 namespace Pharma.Controllers
 {
 	//[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
-	[Route("api/[controller]/[action]")]
-	public class DashboardController : Controller
+	[Route("api/[controller]")]
+	[ApiController]
+
+	public class DashboardController : ControllerBase
 	{
 		private readonly ClaimsPrincipal _caller;
 		private readonly PharmaContext _appDbContext;
@@ -27,23 +31,30 @@ namespace Pharma.Controllers
 			_appDbContext = appDbContext;
 		}
 
-		// GET api/dashboard/home
-		[HttpGet]
-		public async Task<IActionResult> Home()
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
+		[HttpGet("GetPatientHome")]
+		public ActionResult<Patient> GetPatientHome()
 		{
-			// retrieve the user info
-			//HttpContext.User
-			var userId = _caller.Claims.Single(c => c.Type == "id");
-			var patient = await _appDbContext.Patients.Include(c => c.Identity).SingleAsync(c => c.Identity.Id == userId.Value);
+			var patient = Utils.GetPatient(_caller, _appDbContext);
 
-			return new OkObjectResult(new
+			return Ok(new PatientViewModel
 			{
-				Message = "This is secure API and user data!",
-				patient.Name,
-				patient.Surname,
-				patient.Identity.PictureUrl,
-				patient.Identity.FacebookId,
+				PatientId = patient.PatientId,
+				Name = patient.Name,
+				Surname = patient.Surname,
+				FormatedDOB = $"{patient.DOB.Day}/{patient.DOB.Month}/{patient.DOB.Year}",
+				Address = patient.Address,
+				Phone = patient.Phone
 			});
+		}
+
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
+		[HttpGet("GetDoctorHome")]
+		public ActionResult<Doctor> GetDoctorHome()
+		{
+			var doctor = Utils.GetDoctor(_caller, _appDbContext);
+
+			return Ok(doctor);
 		}
 	}
 }

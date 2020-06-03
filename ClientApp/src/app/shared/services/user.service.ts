@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 
 import { UserRegistration } from '../models/user.registration.interface';
 import { ConfigService } from '../utils/config.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import {BaseService} from "./base.service";
 
@@ -26,7 +27,7 @@ export class UserService extends BaseService {
 
   private loggedIn = false;
 
-  constructor(private _userTypeService: UserTypeService, private http: Http, private configService: ConfigService) {
+  constructor(private _userTypeService: UserTypeService, private http: Http, private configService: ConfigService, private router: Router) {
     super();
     this.loggedIn = !!localStorage.getItem('auth_token');
     // ?? not sure if this the best way to broadcast the status but seems to resolve issue on page refresh where auth status is lost in
@@ -73,6 +74,9 @@ export class UserService extends BaseService {
     this._authNavStatusSource.next(false);
 
     localStorage.setItem('user_type', "No User");
+
+    this.router.navigate(['']);             
+
     //this._userTypeService.setUserType("No User");
   }
 

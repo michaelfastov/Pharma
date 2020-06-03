@@ -30,45 +30,17 @@
             </mat-form-field>
             <p *ngIf="selectedDoctor">Reception price for selected doctor is <b>{{selectedDoctor.receptionPrice}}$</b>
             </p>
-            <div *ngIf="liqPayModel">
-                <!-- <form [formGroup]="payForm" (ngSubmit)="LiqPay()">
-                 <input type="hidden" name="data" value="liqPayModel.Data" />
-                <input type="hidden" name="signature" value="liqPayModel.Signature" />
-                <button style="border: none !important; display:inline-block !important;text-align: center !important;padding: 7px 20px !important;
-                                                color: #fff !important; font-size:16px !important; font-weight: 600 !important; font-family:OpenSans, sans-serif; cursor: pointer !important; border-radius: 2px !important;
-                                                background: rgb(122,183,43) !important;" onmouseover="this.style.opacity='0.5';" onmouseout="this.style.opacity='1';">
-                    <img src="https://static.liqpay.ua/buttons/logo-small.png" name="btn_text"
-                         style="margin-right: 7px !important; vertical-align: middle !important;" />
-                    <span style="vertical-align:middle !important">Pay</span> 
-                </button>
-
-                <input type="hidden" name="data" value="{{liqPayModel.Data}}" />
-                <input type="hidden" name="signature" value="{{liqPayModel.Signature}}" />
-                <button style="border: none !important; display:inline-block !important;text-align: center !important;padding: 7px 20px !important;
-                color: #fff !important; font-size:16px !important; font-weight: 600 !important; font-family:OpenSans, sans-serif; cursor: pointer !important; border-radius: 2px !important;
-                background: rgb(122,183,43) !important;" onmouseover="this.style.opacity='0.5';"
-                    onmouseout="this.style.opacity='1';">
-                    <img src="https://static.liqpay.ua/buttons/logo-small.png" name="btn_text"
-                        style="margin-right: 7px !important; vertical-align: middle !important;" />
-                    <span style="vertical-align:middle !important">Pay</span>
-                </button>
-            </form> -->
-                <!-- <form [formGroup]="payForm" (ngSubmit)="pay()" accept-charset="utf-8">
-                <input formControlName="data" type="hidden" name="data" value="{{liqPayModel.data}}" />
-                <input formControlName="signature" type="hidden" name="signature" value="{{liqPayModel.signature}}" />
-
-                <button type="submit" class="payButton">
-                    <img src="https://static.liqpay.ua/buttons/logo-small.png" name="btn_text"
-                        style="margin-right: 7px !important; vertical-align: middle !important;" />
-                    <span style="vertical-align:middle !important">Pay</span>
-                </button>
-            </form> -->
-                <form #form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
-                    <input name="data" value="{{liqPayModel.data}}" />
-                    <input name="signature" value="{{liqPayModel.signature}}" />
-                    <input type="image" (click)="form.submit()" src="//static.liqpay.ua/buttons/p1ru.radius.png" />
+            <!-- <div *ngIf="liqPayModel">
+                  <form #form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
+                    <input type="hidden" name="data" value="{{liqPayModel.data}}" />
+                    <input type="hidden" name="signature" value="{{liqPayModel.signature}}" />
+                    <button (click)="form.submit()" class="payButton">
+                        <img src="https://static.liqpay.ua/buttons/logo-small.png" name="btn_text"
+                            style="margin-right: 7px !important; vertical-align: middle !important;" />
+                        <span style="vertical-align:middle !important">Pay</span>
+                    </button>
                 </form>
-            </div>
+            </div> -->
 
             <br>
             <mat-form-field>
@@ -90,6 +62,44 @@
         </form>
         <button mat-raised-button color="primary" (click)="submitReception()">Submit</button>
     </div>
+    <br>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientReceptions">
+        <thead>
+            <tr>
+                <th>Doctor Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Address</th>
+                <th>Category</th>
+                <th>Pay</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let patientReception of patientReceptions">
+                <td>{{ patientReception.name }}</td>
+                <td>{{ patientReception.formatedDate }}</td>
+                <td>{{ patientReception.time }}</td>
+                <td>{{ patientReception.address }}</td>
+                <td>{{ patientReception.purpose }}</td>
+                <td *ngIf="!patientReception.isPayed" >
+
+                    <form #form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
+                        <input type="hidden" name="data" value="{{patientReception.data}}" />
+                        <input type="hidden" name="signature" value="{{patientReception.signature}}" />
+                        <!-- <input type="image" (click)="form.submit()" src="//static.liqpay.ua/buttons/p1ru.radius.png" /> -->
+                        <button (click)="form.submit()" class="payButton">
+                            <img src="https://static.liqpay.ua/buttons/logo-small.png" name="btn_text"
+                                style="margin-right: 7px !important; vertical-align: middle !important;" />
+                            <span style="vertical-align:middle !important">Pay</span>
+                        </button>
+                    </form>
+                </td>
+                <td *ngIf="patientReception.isPayed" >
+                    Payed
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <div *ngIf="userType=='Doctor'">
@@ -106,8 +116,8 @@
         </thead>
         <tbody>
             <tr *ngFor="let doctorReception of doctorReceptions">
-                <td>{{ doctorReception.patientName }}</td>
-                <td>{{ doctorReception.date }}</td>
+                <td>{{ doctorReception.name }}</td>
+                <td>{{ doctorReception.formatedDate }}</td>
                 <td>{{ doctorReception.time }}</td>
                 <td>{{ doctorReception.address }}</td>
                 <td>{{ doctorReception.purpose }}</td>

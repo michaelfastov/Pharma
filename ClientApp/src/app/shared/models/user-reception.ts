@@ -1,4 +1,4 @@
-export interface DoctorReception {
+export interface UserReception {
     ReceptionId: number;
     PatientId: number;
     DoctorId: number;
@@ -11,5 +11,5 @@ export interface DoctorReception {
     Purpose: string;
     Result: string;
     Price: number;
-    PatientName: string;
+    Name: string;
 }

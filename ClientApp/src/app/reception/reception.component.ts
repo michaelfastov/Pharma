@@ -23,7 +23,8 @@ import { DoctorRating } from '../shared/models/doctor-rating';
 import { HospitalsService } from '../shared/services/hospitals.service';
 import { Hospital } from '../shared/models/hospital';
 import { Reception } from '../shared/models/reception';
-import { DoctorReception } from '../shared/models/doctor-reception';
+import { UserReception } from '../shared/models/user-reception';
+import { PatientReception } from '../shared/models/patient-reception';
 
 
 import { Subscription } from 'rxjs';
@@ -67,7 +68,8 @@ export class ReceptionComponent implements OnInit {
   public selectedHospital: Hospital;
   public selectedDate: string;
   public selectedTime: string;
-  public doctorReceptions: DoctorReception[] = [];
+  public doctorReceptions: UserReception[] = [];
+  public patientReceptions: PatientReception[] = [];
 
   date = new FormControl(new Date());
   serializedDate = new FormControl((new Date()).toISOString());
@@ -88,6 +90,7 @@ export class ReceptionComponent implements OnInit {
       }
       if (this.userType == 'Patient') {
         this.getCategories();
+        this.getPatientsReceptions();
       }
       if (this.userType == 'Patient' && this.doctorId != undefined) {
         this._doctorService.GetDoctorById(this.doctorId).subscribe(data => {
@@ -143,6 +146,16 @@ export class ReceptionComponent implements OnInit {
   getDoctorsReceptions() {
     this._receptionService.GetDoctorsReceptions().subscribe(data => {
       this.doctorReceptions = data;
+    },
+      error => {
+        console.log(error);
+      });
+  }
+
+  getPatientsReceptions() {
+    this._receptionService.GetPatientsReceptions().subscribe(data => {
+      this.patientReceptions = data;
+      console.log(this.patientReceptions)
     },
       error => {
         console.log(error);

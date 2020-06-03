@@ -43,6 +43,15 @@ export class ReceptionService {
     return this._http.get(this.myAppUrl + "/Receptions/GetDoctorsReceptions", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
   }
 
+  GetPatientsReceptions() {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
+    return this._http.get(this.myAppUrl + "/Receptions/GetPatientsReceptions", { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+  }
+
+
   GetReceptionsByDoctorId(doctorId: number) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
