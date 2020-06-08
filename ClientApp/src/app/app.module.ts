@@ -23,6 +23,7 @@ import { RatingsService } from './shared/services/ratings.service';
 import { DrugService } from './shared/services/drug.service';
 import { ProcedureService } from './shared/services/procedure.service';
 import { UserTypeService } from './shared/services/user-type.service';
+import { LanguageService } from './shared/services/language.service';
 import { UserService } from './shared/services/user.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,6 +40,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProcedureComponent } from './procedure/procedure.component';
 import { DocumentComponent } from './document/document.component';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient } from '@angular/common/http';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -70,6 +78,13 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    }),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
@@ -91,6 +106,7 @@ import { MatIconModule } from '@angular/material/icon';
     DatePipe,
     UserService,
     UserTypeService,
+    LanguageService,
     DrugService],
   bootstrap: [AppComponent]
 })

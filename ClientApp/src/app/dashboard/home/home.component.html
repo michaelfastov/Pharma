@@ -4,6 +4,32 @@
   <p>Born: {{patient.formatedDOB}}</p>
   <p>Address: {{patient.address}}</p>
   <p>Contact: {{patient.phone}} </p>
+
+  <button mat-raised-button color="primary" (click)="OpenPatientEdit()">Edit</button>
+  <div *ngIf="isEdit">
+    <form [formGroup]="patientFormGroup" fxFlex="70">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="surname">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="address">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone">
+      </mat-form-field>
+    </form>
+    <button mat-raised-button color="primary" (click)="EditPatient()">Submit</button>
+  </div>
 </div>
 <div *ngIf="userType=='Doctor' && doctor">
   <h1>Doctor</h1>

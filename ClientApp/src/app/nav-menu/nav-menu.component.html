@@ -16,8 +16,12 @@
           </li>
         </ul>
         <ul class="navbar-nav flex-grow" *ngIf="userType!='No User'">
+          <li class="nav-item">
+            <button mat-raised-button color="primary" (click)="setLanguage('en')">En</button>
+            <button mat-raised-button color="primary" (click)="setLanguage('ukr')">Ukr</button>
+          </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/home']">Home</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
             <a class="nav-link text-dark" [routerLink]="['/reception']">Reception</a>

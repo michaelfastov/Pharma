@@ -16,7 +16,6 @@ import {
   Router,
   ActivatedRoute
 } from '@angular/router';
-//import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { RatingsService } from '../shared/services/ratings.service';
 import { DoctorRating } from '../shared/models/doctor-rating';
@@ -76,8 +75,6 @@ export class ReceptionComponent implements OnInit {
 
   constructor(private _cd: ChangeDetectorRef,
     private _fb: FormBuilder, private userTypeService: UserTypeService, private _avRoute: ActivatedRoute, public http: Http, private _hospitalsService: HospitalsService, private _ratingsService: RatingsService, private datePipe: DatePipe, private _router: Router, private _receptionService: ReceptionService, private _doctorService: DoctorService, private _Activatedroute: ActivatedRoute) {
-    //globals.TeamId=this._Activatedroute.snapshot.params['teamID'];
-    // translate.setDefaultLang('en');
     this.doctorId = this._avRoute.snapshot.params["doctorId"];
   }
 

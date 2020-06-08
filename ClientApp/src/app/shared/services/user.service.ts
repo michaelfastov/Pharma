@@ -5,10 +5,10 @@ import { UserRegistration } from '../models/user.registration.interface';
 import { ConfigService } from '../utils/config.service';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import {BaseService} from "./base.service";
+import { BaseService } from "./base.service";
 
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject } from 'rxjs/Rx'; 
+import { BehaviorSubject } from 'rxjs/Rx';
 import { UserTypeService } from './user-type.service';
 
 // Add the RxJS Observable operators we need in this app.
@@ -36,31 +36,31 @@ export class UserService extends BaseService {
     this.baseUrl = configService.getApiURI();
   }
 
-    register(email: string, password: string): Observable<boolean> {
-    let body = JSON.stringify({ email, password});
+  register(email: string, password: string): Observable<boolean> {
+    let body = JSON.stringify({ email, password });
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers });
 
     return this.http.post(this.baseUrl + "/accounts", body, options)
       .map(res => true)
       .catch(this.handleError);
-  }  
+  }
 
-   login(userName, password) {
+  login(userName, password) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
 
     return this.http
       .post(
-      this.baseUrl + '/auth/login',
-      JSON.stringify({ userName, password }),{ headers }
+        this.baseUrl + '/auth/login',
+        JSON.stringify({ userName, password }), { headers }
       )
       .map(res => res.json())
       .map(res => {
         localStorage.setItem('auth_token', res.auth_token);
-      //  localStorage.setItem('user_type', res.user_type);
+        //  localStorage.setItem('user_type', res.user_type);
 
-       this._userTypeService.setUserType(res.user_type);
+        this._userTypeService.setUserType(res.user_type);
         this.loggedIn = true;
         this._authNavStatusSource.next(true);
         return true;
@@ -75,7 +75,7 @@ export class UserService extends BaseService {
 
     localStorage.setItem('user_type', "No User");
 
-    this.router.navigate(['']);             
+    this.router.navigate(['']);
 
     //this._userTypeService.setUserType("No User");
   }
@@ -84,13 +84,22 @@ export class UserService extends BaseService {
     return this.loggedIn;
   }
 
-  facebookLogin(accessToken:string) {
+  PutPatient(patient: any) {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
-    let body = JSON.stringify({ accessToken });  
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
+    return this.http.post(this.baseUrl + '/accounts/PutPatient', patient, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+  }
+
+
+  facebookLogin(accessToken: string) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let body = JSON.stringify({ accessToken });
     return this.http
       .post(
-      this.baseUrl + '/externalauth/facebook', body, { headers })
+        this.baseUrl + '/externalauth/facebook', body, { headers })
       .map(res => res.json())
       .map(res => {
         localStorage.setItem('auth_token', res.auth_token);
@@ -99,6 +108,11 @@ export class UserService extends BaseService {
         return true;
       })
       .catch(this.handleError);
+  }
+
+  errorHandler(error: Response) {
+    console.log(error);
+    return Observable.throw(error.json().error || 'Server error');
   }
 }
 
