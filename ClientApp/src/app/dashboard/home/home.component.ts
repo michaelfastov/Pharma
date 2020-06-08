@@ -29,6 +29,14 @@ export class HomeComponent implements OnInit {
     phone: [null, Validators.required],
   });
 
+  doctorFormGroup = this._fb.group({
+    name: [null, Validators.required],
+    surname: [null, Validators.required],
+    phone: [null, Validators.required],
+    specialization: [null, Validators.required],
+    receptionPrice: [null, Validators.required],
+  });
+
   constructor(private dashboardService: DashboardService, private userTypeService: UserTypeService, private _fb: FormBuilder, private userService: UserService) { }
 
   ngOnInit() {
@@ -70,11 +78,18 @@ export class HomeComponent implements OnInit {
       address: this.patient.address,
       phone: this.patient.phone
     });
+  }
 
-    // this.patientFormGroup.get('name').setValue(this.patient.name);
-    // this.patientFormGroup.get('surname').setValue(this.patient.surname);
-    // this.patientFormGroup.get('address').setValue(this.patient.address);
-    // this.patientFormGroup.get('phone').setValue(this.patient.phone);
+  OpenDoctorEdit() {
+    this.isEdit = !this.isEdit;
+
+    this.doctorFormGroup.patchValue({
+      name: this.doctor.name,
+      surname: this.doctor.surname,
+      phone: this.doctor.phone,
+      specialization: this.doctor.specialization,
+      receptionPrice: this.doctor.receptionPrice,
+    });
   }
 
   EditPatient() {
@@ -89,9 +104,27 @@ export class HomeComponent implements OnInit {
       phone: this.patientFormGroup.get('phone').value
     }
 
-    debugger;
     this.userService.PutPatient(patient).subscribe((data) => {
       this.GetPatient()
+    }, error => {
+      console.log(error)
+    })
+  }
+
+  EditDoctor() {
+    this.isEdit = !this.isEdit;
+
+    var doctor: Doctor = {
+      doctorId: -1,
+      name: this.doctorFormGroup.get('name').value,
+      surname: this.doctorFormGroup.get('surname').value,
+      phone: this.doctorFormGroup.get('phone').value,
+      specialization: this.doctorFormGroup.get('specialization').value,
+      receptionPrice: this.doctorFormGroup.get('receptionPrice').value
+    }
+
+    this.userService.PutDoctor(doctor).subscribe((data) => {
+      this.GetDoctor()
     }, error => {
       console.log(error)
     })

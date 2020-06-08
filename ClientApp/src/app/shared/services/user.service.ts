@@ -89,9 +89,16 @@ export class UserService extends BaseService {
     headers.append('Content-Type', 'application/json');
     let authToken = localStorage.getItem('auth_token');
     headers.append('Authorization', `Bearer ${authToken}`);
-    return this.http.post(this.baseUrl + '/accounts/PutPatient', patient, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+    return this.http.put(this.baseUrl + '/accounts/PutPatient', patient, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
   }
 
+  PutDoctor(doctor: any) {
+    let headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    let authToken = localStorage.getItem('auth_token');
+    headers.append('Authorization', `Bearer ${authToken}`);
+    return this.http.put(this.baseUrl + '/accounts/PutDoctor', doctor, { headers }).map((response: Response) => response.json()).catch(this.errorHandler);
+  }
 
   facebookLogin(accessToken: string) {
     let headers = new Headers();

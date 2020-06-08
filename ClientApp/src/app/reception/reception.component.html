@@ -3,7 +3,7 @@
     <div fxLayout="row" fxLayoutAlign="start center">
         <form [formGroup]="receptionFormGroup" fxFlex="70">
             <mat-form-field>
-                <mat-label>Category</mat-label>
+                <mat-label translate>Category</mat-label>
                 <mat-select (selectionChange)="onCategorychange($event.value)" formControlName="category">
                     <mat-option *ngFor="let category of categories" [value]="category.name">
                         {{category.name}}
@@ -12,7 +12,7 @@
             </mat-form-field>
             <br>
             <mat-form-field>
-                <mat-label>Hospital</mat-label>
+                <mat-label translate>Hospital</mat-label>
                 <mat-select (selectionChange)="onHospitalchange($event.value)" formControlName="hospital">
                     <mat-option *ngFor="let hospital of hospitals" [value]="hospital">
                         {{hospital.name}}
@@ -21,7 +21,7 @@
             </mat-form-field>
             <br>
             <mat-form-field>
-                <mat-label>Doctor</mat-label>
+                <mat-label translate>Doctor</mat-label>
                 <mat-select (selectionChange)="onDoctorChange($event.value)" formControlName="doctor">
                     <mat-option *ngFor="let doctor of doctors" [value]="doctor">
                         {{doctor.name}}
@@ -44,7 +44,7 @@
 
             <br>
             <mat-form-field>
-                <mat-label>Choose a date</mat-label>
+                <mat-label translate>Choose a date</mat-label>
                 <input matInput [matDatepicker]="picker" (dateInput)="OnDateChange($event.value)" [value]="date.value"
                     formControlName="date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -52,7 +52,7 @@
             </mat-form-field>
             <br>
             <mat-form-field>
-                <mat-label>Time</mat-label>
+                <mat-label translate>Time</mat-label>
                 <mat-select (selectionChange)="onTimeChange($event.value)" formControlName="time">
                     <mat-option *ngFor="let ah of availableHours" [value]="ah">
                         {{ah}}
@@ -60,18 +60,18 @@
                 </mat-select>
             </mat-form-field>
         </form>
-        <button mat-raised-button color="primary" (click)="submitReception()">Submit</button>
+        <button mat-raised-button color="primary" (click)="submitReception()" translate>Submit</button>
     </div>
     <br>
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientReceptions">
         <thead>
             <tr>
-                <th>Doctor Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Address</th>
-                <th>Category</th>
-                <th>Pay</th>
+                <th translate>Doctor Name</th>
+                <th translate>Date</th>
+                <th translate>Time</th>
+                <th translate>Address</th>
+                <th translate>Category</th>
+                <th translate>Pay</th>
             </tr>
         </thead>
         <tbody>
@@ -103,15 +103,15 @@
 </div>
 
 <div *ngIf="userType=='Doctor'">
-    <h1>Receptions</h1>
+    <h1 translate>Receptions</h1>
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="doctorReceptions">
         <thead>
             <tr>
-                <th>Patient Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Address</th>
-                <th>Category</th>
+                <th translate>Patient Name</th>
+                <th translate>Date</th>
+                <th translate>Time</th>
+                <th translate>Address</th>
+                <th translate>Category</th>
             </tr>
         </thead>
         <tbody>

@@ -1,5 +1,7 @@
 {
     "Reception":"Прийом",
     "Pick a reception": "Записатися на прийом",
-    "Home": "Дiм"
+    "Home": "Дiм",
+    "Procedure Name is": "Потрiбно заповнити назву процедури",
+    "required": "обов'язково"
 }

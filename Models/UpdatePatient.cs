@@ -10,9 +10,7 @@ namespace Pharma.Models
 		public int PatientId { get; set; }
 		public string Name { get; set; }
 		public string Surname { get; set; }
-		public string Dob { get; set; }
 		public string Address { get; set; }
 		public string Phone { get; set; }
-
 	}
 }

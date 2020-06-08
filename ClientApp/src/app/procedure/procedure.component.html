@@ -1,7 +1,7 @@
 <div *ngIf="userType=='Doctor'">
-    <h1>Prescribe Medicine</h1>
+    <h1 translate>Prescribe Medicine</h1>
     <mat-form-field>
-        <mat-label>Patient</mat-label>
+        <mat-label translate>Patient</mat-label>
         <mat-select (selectionChange)="onPatientChange($event.value)">
             <mat-option *ngFor="let patient of patients" [value]="patient">
                 {{patient.name}}
@@ -11,24 +11,25 @@
     <br>
     <form class="example-form" (submit)="submitProcedure()">
         <mat-form-field class="example-full-width">
-            <mat-label>Add Procedure</mat-label>
-            <input matInput [formControl]="procedureFormControl" [errorStateMatcher]="matcher" placeholder="Procedure Name">
-            <mat-hint>Fill the procedure name field</mat-hint>
-            <mat-error *ngIf="procedureFormControl.hasError('required')">
-                Procedure Name is <strong>required</strong>
+            <mat-label translate>Add Procedure</mat-label>
+            <input matInput [formControl]="procedureFormControl" [errorStateMatcher]="matcher"
+                placeholder="Procedure Name">
+            <mat-hint translate>Fill the procedure name field</mat-hint>
+            <mat-error *ngIf="procedureFormControl.hasError('required')" translate>
+                Procedure Name is <strong translate>required</strong>
             </mat-error>
         </mat-form-field>
         <br>
         <br>
 
-        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button mat-raised-button color="primary" type="submit" translate>Submit</button>
     </form>
     <br>
 
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="procedures">
         <thead>
             <tr>
-                <th>Procedure Name</th>
+                <th translate>Procedure Name</th>
             </tr>
         </thead>
         <tbody>
@@ -40,12 +41,12 @@
 </div>
 
 <div *ngIf="userType=='Patient'">
-    <h1>Prescribed Medicine</h1>
+    <h1 translate>Prescribed Medicine</h1>
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientProcedures">
         <thead>
             <tr>
-                <th>Doctor Name</th>
-                <th>Drug Name</th>
+                <th translate>Doctor Name</th>
+                <th translate>Drug Name</th>
             </tr>
         </thead>
         <tbody>

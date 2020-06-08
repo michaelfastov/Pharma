@@ -31,10 +31,42 @@
     <button mat-raised-button color="primary" (click)="EditPatient()">Submit</button>
   </div>
 </div>
+
 <div *ngIf="userType=='Doctor' && doctor">
   <h1>Doctor</h1>
   <p>{{doctor.surname}} {{doctor.name}}</p>
   <p>Specialization: {{doctor.specialization}}</p>
   <p>Reception Price: {{doctor.receptionPrice}}</p>
   <p>Contact: {{doctor.phone}} </p>
+
+  <button mat-raised-button color="primary" (click)="OpenDoctorEdit()">Edit</button>
+  <div *ngIf="isEdit">
+    <form [formGroup]="doctorFormGroup" fxFlex="70">
+      <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Surname</mat-label>
+        <input matInput formControlName="surname">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Specialization</mat-label>
+        <input matInput formControlName="specialization">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Reception Price</mat-label>
+        <input matInput formControlName="receptionPrice">
+      </mat-form-field>
+    </form>
+    <button mat-raised-button color="primary" (click)="EditDoctor()">Submit</button>
+  </div>
 </div>

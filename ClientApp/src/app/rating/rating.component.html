@@ -1,7 +1,7 @@
 <h1 id="tableLabel">{{ratingName}}</h1>
 
 
-<p *ngIf="!ratings"><em>Loading...</em></p>
+<p *ngIf="!ratings"><em translate>Loading...</em></p>
 
 <!-- <table mat-table [dataSource]="ratings" class="mat-elevation-z8">
     <ng-container matColumnDef="rankingPlace">
@@ -19,16 +19,16 @@
 <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="ratings">
     <thead>
       <tr>
-        <th>Place</th>
-        <th>Doctor Name</th>
-        <th>Reception</th>
+        <th translate>Place</th>
+        <th translate>Doctor Name</th>
+        <th translate>Reception</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let rating of ratings">
         <td>{{ rating.rankingPlace }}</td>
         <td>{{ rating.doctorName }}</td>
-        <td><a [routerLink]="['/reception/', rating.doctorId]">Sign</a></td>
+        <td><a [routerLink]="['/reception/', rating.doctorId]" translate>Sign</a></td>
       </tr>
     </tbody>
   </table>

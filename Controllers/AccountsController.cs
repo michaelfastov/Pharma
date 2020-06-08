@@ -78,7 +78,7 @@ namespace Pharma.Controllers
 		}
 
 		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiUser")]
-		[HttpPost("PutPatient")]
+		[HttpPut("PutPatient")]
 		public async Task<IActionResult> PutPatient(UpdatePatient patient)
 		{
 			var savedPatient = Utils.GetPatient(_caller, _appDbContext);
@@ -88,6 +88,25 @@ namespace Pharma.Controllers
 			savedPatient.Phone = patient.Phone;
 
 			_appDbContext.Entry(savedPatient).State = EntityState.Modified;
+
+			await _appDbContext.SaveChangesAsync();
+
+			return NoContent();
+		}
+
+		[Authorize(AuthenticationSchemes = "Bearer", Policy = "ApiDoctor")]
+		[HttpPut("PutDoctor")]
+		public async Task<IActionResult> PutDoctor(Doctor doctor)
+		{
+			var savedDoctor = Utils.GetDoctor(_caller, _appDbContext);
+			savedDoctor.Name = doctor.Name;
+			savedDoctor.Surname = doctor.Surname;
+			savedDoctor.Phone = doctor.Phone;
+			savedDoctor.Specialization = doctor.Specialization;
+			savedDoctor.ReceptionPrice = doctor.ReceptionPrice;
+
+
+			_appDbContext.Entry(savedDoctor).State = EntityState.Modified;
 
 			await _appDbContext.SaveChangesAsync();
 
