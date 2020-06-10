@@ -8,11 +8,15 @@
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
+          <li class="nav-item" *ngIf="userType=='No User'">
+            <button mat-raised-button color="primary" (click)="setLanguage('en')">En</button>
+            <button mat-raised-button color="primary" (click)="setLanguage('ukr')">Ukr</button>
+          </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="userType!='No User'">
-            <a class="nav-link text-dark" [routerLink]="" (click)="logout()">Logout</a>
+            <a class="nav-link text-dark" [routerLink]="" (click)="logout()" translate>Logout</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="userType=='No User'">
-            <a class="nav-link text-dark" [routerLink]="['/login']">Login</a>
+            <a class="nav-link text-dark" [routerLink]="['/login']" translate>Login</a>
           </li>
         </ul>
         <ul class="navbar-nav flex-grow" *ngIf="userType!='No User'">
@@ -21,22 +25,22 @@
             <button mat-raised-button color="primary" (click)="setLanguage('ukr')">Ukr</button>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']" [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/dashboard/home']">Home</a>
+            <a class="nav-link text-dark" [routerLink]="['/dashboard/home']" translate>Home</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/reception']">Reception</a>
+            <a class="nav-link text-dark" [routerLink]="['/reception']" translate>Reception</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/doctor-ratings']">Ratings</a>
+            <a class="nav-link text-dark" [routerLink]="['/doctor-ratings']" translate>Ratings</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/document']">Documents</a>
+            <a class="nav-link text-dark" [routerLink]="['/document']" translate>Documents</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/drug']">Drugs</a>
+            <a class="nav-link text-dark" [routerLink]="['/drug']" translate>Drugs</a>
           </li>
           <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/procedure']">Procedures</a>
+            <a class="nav-link text-dark" [routerLink]="['/procedure']" translate>Procedures</a>
           </li>
         </ul>
       </div>

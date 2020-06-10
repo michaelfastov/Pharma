@@ -1,16 +1,25 @@
-<h1>Welcome to Pharma!</h1>
-<p>You should <a [routerLink]="['/login']">Login</a> or <a [routerLink]="['/register']">Register</a> first</p>
-<p>Here you can:</p>
+<h1 translate>Welcome to Pharma!</h1>
+<div>
+  <p style="display: inline" translate>You should </p> <a [routerLink]="['/login']" translate>Login</a>
+  <p style="display: inline" translate>or</p> <a [routerLink]="['/register']" translate>Register</a>
+  <p style="display: inline" translate>first</p>
+</div>
+<p translate>Here you can:</p>
 <ul>
-  <li>Pick a <a [routerLink]="['/reception']">Reception</a></li>
-  <li>Revise <a [routerLink]="['/doctor-ratings']">Ratings</a></li>
-  <li>Fill your profile</li>
+  <li translate>Pick a <a [routerLink]="['/reception']" translate>Reception</a></li>
+  <li translate>Revise <a [routerLink]="['/doctor-ratings']" translate>Ratings</a></li>
+  <li translate>Fill your profile</li>
 </ul>
-<p>If you have already visited a doctor, you can</p>
+<p translate>If you have already visited a doctor, you can:</p>
 <ul>
-  <li>See the <a [routerLink]="['/drug']">Medecine</a> adviced to you</li>
-  <li>Download your <a [routerLink]="['/document']">Documents</a></li>
-  <li>Or revise prescribed <a [routerLink]="['/procedure']">Procedures</a></li>
+  <li>
+    <div >
+      <p style="display: inline" translate>See the</p> <a [routerLink]="['/drug']" translate>Medecine</a>
+      <p style="display: inline" translate>adviced to you</p>
+    </div>
+  </li>
+  <li translate>Download your <a [routerLink]="['/document']" translate>Documents</a></li>
+  <li translate>Or revise prescribed <a [routerLink]="['/procedure']" translate>Procedures</a></li>
 </ul>
-<p>Help healthcare make even smarter descisions!</p>
-<p>For any complaints and suggestions email on <strong>Pharma@gmail.com</strong></p>
+<p translate>Help healthcare make even smarter descisions!</p>
+<p translate>For any complaints and suggestions email on <strong>Pharma@gmail.com</strong></p>

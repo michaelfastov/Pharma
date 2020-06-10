@@ -1,72 +1,96 @@
 <div *ngIf="userType=='Patient' && patient">
-  <h1>Patient</h1>
-  <p>{{patient.surname}} {{patient.name}}</p>
-  <p>Born: {{patient.formatedDOB}}</p>
-  <p>Address: {{patient.address}}</p>
-  <p>Contact: {{patient.phone}} </p>
-
+  <h1 translate>Patient</h1>
+  <ul style="list-style-type: none;">
+    <li>
+      <p>{{patient.surname}} {{patient.name}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Born:</p>
+      <p style="display: inline"> {{patient.formatedDOB}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Address:</p>
+      <p style="display: inline"> {{patient.address}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Contact:</p>
+      <p style="display: inline"> {{patient.phone}}</p>
+    </li>
+  </ul>
   <button mat-raised-button color="primary" (click)="OpenPatientEdit()">Edit</button>
   <div *ngIf="isEdit">
     <form [formGroup]="patientFormGroup" fxFlex="70">
       <mat-form-field>
-        <mat-label>Name</mat-label>
+        <mat-label translate>Name</mat-label>
         <input matInput formControlName="name">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Surname</mat-label>
+        <mat-label translate>Surname</mat-label>
         <input matInput formControlName="surname">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Address</mat-label>
+        <mat-label translate>Address</mat-label>
         <input matInput formControlName="address">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Phone</mat-label>
+        <mat-label translate>Phone</mat-label>
         <input matInput formControlName="phone">
       </mat-form-field>
     </form>
-    <button mat-raised-button color="primary" (click)="EditPatient()">Submit</button>
+    <button mat-raised-button color="primary" (click)="EditPatient()" translate>Submit</button>
   </div>
 </div>
 
 <div *ngIf="userType=='Doctor' && doctor">
-  <h1>Doctor</h1>
-  <p>{{doctor.surname}} {{doctor.name}}</p>
-  <p>Specialization: {{doctor.specialization}}</p>
-  <p>Reception Price: {{doctor.receptionPrice}}</p>
-  <p>Contact: {{doctor.phone}} </p>
-
-  <button mat-raised-button color="primary" (click)="OpenDoctorEdit()">Edit</button>
+  <h1 translate>Doctor</h1>
+  <ul style="list-style-type: none;">
+    <li>
+      <p>{{doctor.surname}} {{doctor.name}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Specialization:</p>
+      <p style="display: inline"> {{doctor.specialization}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Reception Price:</p>
+      <p style="display: inline"> {{doctor.receptionPrice}}</p>
+    </li>
+    <li>
+      <p style="display: inline" translate>Contact:</p>
+      <p style="display: inline"> {{doctor.phone}} </p>
+    </li>
+  </ul>
+  <button mat-raised-button color="primary" (click)="OpenDoctorEdit()" translate>Edit</button>
   <div *ngIf="isEdit">
     <form [formGroup]="doctorFormGroup" fxFlex="70">
       <mat-form-field>
-        <mat-label>Name</mat-label>
+        <mat-label translate>Name</mat-label>
         <input matInput formControlName="name">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Surname</mat-label>
+        <mat-label translate>Surname</mat-label>
         <input matInput formControlName="surname">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Phone</mat-label>
+        <mat-label translate>Phone</mat-label>
         <input matInput formControlName="phone">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Specialization</mat-label>
+        <mat-label translate>Specialization</mat-label>
         <input matInput formControlName="specialization">
       </mat-form-field>
       <br>
       <mat-form-field>
-        <mat-label>Reception Price</mat-label>
+        <mat-label translate>Reception Price</mat-label>
         <input matInput formControlName="receptionPrice">
       </mat-form-field>
     </form>
-    <button mat-raised-button color="primary" (click)="EditDoctor()">Submit</button>
+    <button mat-raised-button color="primary" (click)="EditDoctor()" translate>Submit</button>
   </div>
 </div>

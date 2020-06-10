@@ -1,7 +1,7 @@
 <div *ngIf="userType=='Doctor'">
-    <h1>Add Documents</h1>
+    <h1 translate>Add Documents</h1>
     <mat-form-field>
-        <mat-label>Patient</mat-label>
+        <mat-label translate>Patient</mat-label>
         <mat-select (selectionChange)="onPatientChange($event.value)">
             <mat-option *ngFor="let patient of patients" [value]="patient">
                 {{patient.name}}
@@ -16,7 +16,7 @@
                 <input matInput placeholder="Document" formControlName="fileName" readonly (click)="fileInput.click()">
             </mat-form-field>
         </form>
-        <button [disabled]="exportFormGroup.invalid" mat-button color="primary" fxFlex="30" (click)="upload()">
+        <button [disabled]="exportFormGroup.invalid" mat-button color="primary" fxFlex="30" (click)="upload()" translate>
             Upload
         </button>
     </div>
@@ -24,14 +24,14 @@
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="documents">
         <thead>
             <tr>
-                <th>Document Name</th>
-                <th>Download</th>
+                <th translate>Document Name</th>
+                <th translate>Download</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let document of documents">
                 <td>{{ document.name }}</td>
-                <td><button mat-raised-button color="primary" (click)="download(document.documentId)">Download</button>
+                <td><button mat-raised-button color="primary" (click)="download(document.documentId)" translate>Download</button>
                 </td>
             </tr>
         </tbody>
@@ -39,20 +39,20 @@
 </div>
 
 <div *ngIf="userType=='Patient'">
-    <h1>Documents</h1>
+    <h1 translate>Documents</h1>
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="patientDocuments">
         <thead>
             <tr>
-                <th>Doctor Name</th>
-                <th>Document</th>
-                <th>Download</th>
+                <th translate>Doctor Name</th>
+                <th translate>Document</th>
+                <th translate>Download</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let patientDocument of patientDocuments">
                 <td>{{ patientDocument.doctorName }}</td>
                 <td>{{ patientDocument.name }}</td>
-                <td><button mat-raised-button color="primary" (click)="download(patientDocument.documentId)">Download</button>
+                <td><button mat-raised-button color="primary" (click)="download(patientDocument.documentId)" translate>Download</button>
             </tr>
         </tbody>
     </table>
