@@ -47,6 +47,7 @@ export class DrugComponent implements OnInit {
 
   userType = "";
   selectedPatient: Patient;
+  drugComments = "";
   drugs: Drug[];
   patients: Patient[];
 
@@ -119,9 +120,11 @@ export class DrugComponent implements OnInit {
       DoctorId: -1,
       Name: this.drugFormControl.value,
       Price: -1,
-      Category: ""
+      Category: "",
+      Comments: this.drugComments
     }
 
+    debugger;
     this.drugService.SaveDrug(drug).subscribe((data) => {
       // this._router.navigate(['/somwhere']);  
       this.onPatientChange(this.selectedPatient);

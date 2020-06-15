@@ -9,6 +9,13 @@
         </mat-select>
     </mat-form-field>
     <br>
+
+    <mat-form-field>
+        <mat-label translate>Comments</mat-label>
+        <input matInput [(ngModel)]="procedureComments" />
+
+    </mat-form-field>
+    <br>
     <form class="example-form" (submit)="submitProcedure()">
         <mat-form-field class="example-full-width">
             <mat-label translate>Add Procedure</mat-label>
@@ -30,11 +37,14 @@
         <thead>
             <tr>
                 <th translate>Procedure Name</th>
+                <th translate>Comments</th>
+
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let procedure of procedures">
                 <td>{{ procedure.name }}</td>
+                <td>{{ procedure.comments }}</td>
             </tr>
         </tbody>
     </table>
@@ -46,13 +56,16 @@
         <thead>
             <tr>
                 <th translate>Doctor Name</th>
-                <th translate>Drug Name</th>
+                <th translate>Procedure Name</th>
+                <th translate>Comments</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let patientProcedure of patientProcedures">
                 <td>{{ patientProcedure.doctorName }}</td>
                 <td>{{ patientProcedure.name }}</td>
+                <td>{{ patientProcedure.comments }}</td>
+
             </tr>
         </tbody>
     </table>

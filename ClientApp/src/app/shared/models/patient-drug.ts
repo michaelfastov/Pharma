@@ -6,4 +6,5 @@ export interface PatientDrug {
     Name: string;
     Price: number;
     Category: string
+    Comments: string
 }

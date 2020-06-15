@@ -13,6 +13,7 @@ namespace Pharma.DbContext.Entities
 		public string Name { get; set; }
 		public double Price { get; set; }
 		public string Category { get; set; }
+		public string Comments { get; set; }
 
 		public Patient Patient { get; set; }
 		public Doctor Doctor { get; set; }

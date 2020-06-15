@@ -245,7 +245,7 @@ export class ReceptionComponent implements OnInit {
     }
 
     this._receptionService.saveReception(reception).subscribe((data) => {
-      // this._router.navigate(['/somwhere']);  
+      this.getPatientsReceptions()
     }, error => {
       console.log(error)
     })

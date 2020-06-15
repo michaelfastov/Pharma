@@ -9,6 +9,12 @@
         </mat-select>
     </mat-form-field>
     <br>
+    <mat-form-field>
+        <mat-label translate>Comments</mat-label>
+        <input matInput [(ngModel)]="drugComments" />
+    </mat-form-field>
+    <br>
+
     <form class="example-form" (submit)="submitDrug()">
         <mat-form-field class="example-full-width">
             <mat-label translate>Add Drug</mat-label>
@@ -19,21 +25,29 @@
             </mat-error>
         </mat-form-field>
         <br>
+
         <br>
 
         <button mat-raised-button color="primary" type="submit" translate>Submit</button>
+
     </form>
+
+    <br>
     <br>
 
     <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="drugs">
         <thead>
             <tr>
                 <th translate>Drug Name</th>
+                <th translate>Comments</th>
+
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let drug of drugs">
                 <td>{{ drug.name }}</td>
+                <td>{{ drug.comments }}</td>
+
             </tr>
         </tbody>
     </table>
@@ -46,12 +60,16 @@
             <tr>
                 <th translate>Doctor Name</th>
                 <th translate>Medecine Name</th>
+                <th translate>Comments</th>
+
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let patientDrug of patientDrugs">
                 <td>{{ patientDrug.doctorName }}</td>
                 <td>{{ patientDrug.name }}</td>
+                <td>{{ patientDrug.comments }}</td>
+
             </tr>
         </tbody>
     </table>

@@ -49,6 +49,7 @@ export class ProcedureComponent implements OnInit {
   procedures: Procedure[];
   patients: Patient[];
   patientProcedures: PatientProcedure[];
+  procedureComments = "";
 
   procedureFormControl = new FormControl('', [
     Validators.required,
@@ -116,7 +117,9 @@ export class ProcedureComponent implements OnInit {
       DoctorId: -1,
       Name: this.procedureFormControl.value,
       Price: -1,
-      Category: ""
+      Category: "",
+      Comments: this.procedureComments
+
     }
 
     this.procedureService.SaveProcedure(procedure).subscribe((data) => {

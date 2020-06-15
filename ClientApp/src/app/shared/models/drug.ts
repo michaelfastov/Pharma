@@ -4,5 +4,6 @@ export interface Drug {
     DoctorId: number;
     Name: string;
     Price: number;
-    Category: string
+    Category: string;
+    Comments: string
 }

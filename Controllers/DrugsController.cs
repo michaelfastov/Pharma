@@ -67,6 +67,7 @@ namespace Pharma.Controllers
 					Name = drugs.Name,
 					Price = drugs.Price,
 					Category = drugs.Category,
+					Comments = drugs.Comments
 				};
 
 			return Ok(result);
